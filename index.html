@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drago Clicker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f5d7;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #5a3d00;
+    }
+    #drago {
+      width: 150px;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+    }
+    #drago:active {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    #counter {
+      font-size: 24px;
+      color: #444;
+      margin-top: 20px;
+    }
+    #level {
+      font-size: 20px;
+      color: #5a3d00;
+      margin-top: 10px;
+    }
+    #shop {
+      margin-top: 30px;
+      padding: 10px;
+      background-color: #ffd700;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #shop:hover {
+      background-color: #ffcc00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Drago Clicker</h1>
+  <img id="drago" src="drako.png" alt="Drago" />
+  <div id="counter">Вы заработали: 0 Drago</div>
+  <div id="level">Уровень: 1</div>
+  <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
+
+  <script>
+    // Переменные
+    let dragoCount = 0; // Очки Drago
+    let level = 1; // Уровень
+    const levelCost = 50; // Стоимость уровня
+
+    // Элементы
+    const drago = document.getElementById('drago');
+    const counter = document.getElementById('counter');
+    const levelDisplay = document.getElementById('level');
+    const shopButton = document.getElementById('shop');
+
+    // Добавление звука
+    const clickSound = new Audio('https://www.fesliyanstudios.com/play-mp3/387'); // Бесплатный звук
+
+    // Анимация дракона
+    setInterval(() => {
+      const x = Math.random() * (window.innerWidth - 150); // Случайная позиция по горизонтали
+      const y = Math.random() * (window.innerHeight - 150); // Случайная позиция по вертикали
+      drago.style.left = `${x}px`;
+      drago.style.top = `${y}px`;
+    }, 2000); // Дракон меняет позицию каждые 2 секунды
+
+    // Клик по дракону
+    drago.addEventListener('click', () => {
+      dragoCount += level; // Заработок зависит от уровня
+      counter.textContent = `Вы заработали: ${dragoCount} Drago`;
+      clickSound.play(); // Воспроизводим звук
+    });
+
+    // Покупка уровня
+    shopButton.addEventListener('click', () => {
+      if (dragoCount >= levelCost) {
+        dragoCount -= levelCost; // Тратим очки
+        level++; // Увеличиваем уровень
+        counter.textContent = `Вы заработали: ${dragoCount} Drago`;
+        levelDisplay.textContent = `Уровень: ${level}`;
+        shopButton.textContent = `Улучшить уровень (Стоимость: ${levelCost * level} Drago)`; // Увеличиваем стоимость
+      } else {
+        alert('Недостаточно Drago для улучшения!');
+      }
+    });
+  </script>
+</body>
+</html>
