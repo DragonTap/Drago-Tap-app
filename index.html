@@ -254,6 +254,35 @@
       ratingModal.style.display = 'none';
       overlay.style.display = 'none';
     });
+
+    const SERVER_URL = "https://your-server-url.com"; // Замени на URL сервера
+
+// Обновление данных на сервере
+const updateServer = async () => {
+  try {
+    await fetch(`${SERVER_URL}/update`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, score: dragoCount, level }),
+    });
+  } catch (error) {
+    console.error("Ошибка обновления данных:", error);
+  }
+};
+
+// Получение рейтинга с сервера
+const fetchRating = async () => {
+  try {
+    const response = await fetch(`${SERVER_URL}/rating`);
+    const players = await response.json();
+    ratingList.innerHTML = players
+      .map(player => `<li>${player.username}: ${player.score} Drago</li>`)
+      .join('');
+  } catch (error) {
+    console.error("Ошибка получения рейтинга:", error);
+  }
+};
+
   </script>
 </body>
 </html>
