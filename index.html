@@ -27,18 +27,12 @@
     #drago:active {
       transform: translate(-50%, -50%) scale(1.2);
     }
-    #counter {
-      font-size: 24px;
-      color: #444;
-      margin-top: 20px;
-    }
-    #level {
+    #counter, #level {
       font-size: 20px;
-      color: #5a3d00;
-      margin-top: 10px;
+      margin: 10px 0;
     }
     #shop {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 10px;
       background-color: #ffd700;
       color: #333;
@@ -50,56 +44,132 @@
     #shop:hover {
       background-color: #ffcc00;
     }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+    }
+    #bonus, #leaderboard {
+      margin: 5px 0;
+    }
+    #leaderboard ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #leaderboard li {
+      font-size: 14px;
+      margin: 3px 0;
+    }
   </style>
 </head>
 <body>
   <h1>Drago Clicker</h1>
-  <img id="drago" src="drako.png" alt="Drago" />
+  <img id="drago" src="https://i.imgur.com/3UP3FxP.png" alt="Drago" />
   <div id="counter">Вы заработали: 0 Drago</div>
   <div id="level">Уровень: 1</div>
   <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
 
+  <footer>
+    <div id="bonus">
+      <button id="bonus-btn">Получить ежедневный бонус</button>
+      <p id="bonus-message"></p>
+    </div>
+    <div id="leaderboard">
+      <h3>Рейтинг игроков</h3>
+      <ul id="leaderboard-list"></ul>
+    </div>
+  </footer>
+
   <script>
     // Переменные
-    let dragoCount = 0; // Очки Drago
-    let level = 1; // Уровень
-    const levelCost = 50; // Стоимость уровня
+    let dragoCount = 0;
+    let level = 1;
+    const levelCost = 50;
+
+    // Локальный рейтинг
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
     // Элементы
     const drago = document.getElementById('drago');
     const counter = document.getElementById('counter');
     const levelDisplay = document.getElementById('level');
     const shopButton = document.getElementById('shop');
+    const bonusButton = document.getElementById('bonus-btn');
+    const bonusMessage = document.getElementById('bonus-message');
+    const leaderboardList = document.getElementById('leaderboard-list');
 
-    // Добавление звука
-    const clickSound = new Audio('https://www.fesliyanstudios.com/play-mp3/387'); // Бесплатный звук
+    // Счетчик ежедневного бонуса
+    const lastBonus = localStorage.getItem('lastBonus') || 0;
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+
+    // Инициализация
+    const updateLeaderboard = () => {
+      leaderboard.sort((a, b) => b.score - a.score);
+      leaderboardList.innerHTML = leaderboard
+        .slice(0, 5)
+        .map(player => `<li>${player.name}: ${player.score} Drago</li>`)
+        .join('');
+    };
+    updateLeaderboard();
+
+    // Проверка бонуса
+    const checkBonus = () => {
+      const now = new Date().getTime();
+      if (now - lastBonus > ONE_DAY) {
+        bonusButton.disabled = false;
+        bonusMessage.textContent = '';
+      } else {
+        bonusButton.disabled = true;
+        bonusMessage.textContent = 'Бонус уже получен! Попробуйте завтра.';
+      }
+    };
+    checkBonus();
+
+    // Ежедневный бонус
+    bonusButton.addEventListener('click', () => {
+      dragoCount += 100; // Бонус
+      counter.textContent = `Вы заработали: ${dragoCount} Drago`;
+      localStorage.setItem('lastBonus', new Date().getTime());
+      checkBonus();
+    });
 
     // Анимация дракона
     setInterval(() => {
-      const x = Math.random() * (window.innerWidth - 150); // Случайная позиция по горизонтали
-      const y = Math.random() * (window.innerHeight - 150); // Случайная позиция по вертикали
+      const x = Math.random() * (window.innerWidth - 150);
+      const y = Math.random() * (window.innerHeight - 150);
       drago.style.left = `${x}px`;
       drago.style.top = `${y}px`;
-    }, 2000); // Дракон меняет позицию каждые 2 секунды
+    }, 2000);
 
     // Клик по дракону
     drago.addEventListener('click', () => {
-      dragoCount += level; // Заработок зависит от уровня
+      dragoCount += level;
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
-      clickSound.play(); // Воспроизводим звук
     });
 
     // Покупка уровня
     shopButton.addEventListener('click', () => {
-      if (dragoCount >= levelCost) {
-        dragoCount -= levelCost; // Тратим очки
-        level++; // Увеличиваем уровень
+      if (dragoCount >= levelCost * level) {
+        dragoCount -= levelCost * level;
+        level++;
         counter.textContent = `Вы заработали: ${dragoCount} Drago`;
         levelDisplay.textContent = `Уровень: ${level}`;
-        shopButton.textContent = `Улучшить уровень (Стоимость: ${levelCost * level} Drago)`; // Увеличиваем стоимость
+        shopButton.textContent = `Улучшить уровень (Стоимость: ${levelCost * level} Drago)`;
       } else {
         alert('Недостаточно Drago для улучшения!');
       }
+    });
+
+    // Обновление рейтинга
+    window.addEventListener('beforeunload', () => {
+      const playerName = prompt('Введите ваше имя:', 'Игрок');
+      leaderboard.push({ name: playerName || 'Игрок', score: dragoCount });
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
     });
   </script>
 </body>
