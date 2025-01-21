@@ -81,7 +81,7 @@
       background-color: #777;
       cursor: not-allowed;
     }
-    #error-modal {
+    #error-modal, #rating-modal {
       display: none;
       position: fixed;
       top: 50%;
@@ -96,13 +96,19 @@
       text-align: center;
       z-index: 1000;
     }
-    #error-modal h2 {
+    #error-modal h2, #rating-modal h2 {
       margin: 0 0 10px;
     }
-    #error-modal p {
+    #error-modal p, #rating-modal ul {
       margin: 10px 0;
+      padding: 0;
+      list-style-type: none;
+      text-align: left;
     }
-    #close-error-modal {
+    #rating-modal ul li {
+      margin: 5px 0;
+    }
+    #close-error-modal, #close-rating-modal {
       background-color: #ff4c4c;
       color: white;
       border: none;
@@ -111,7 +117,7 @@
       font-size: 16px;
       cursor: pointer;
     }
-    #close-error-modal:hover {
+    #close-error-modal:hover, #close-rating-modal:hover {
       background-color: #ff0000;
     }
     #overlay {
@@ -129,7 +135,7 @@
 </head>
 <body>
   <div id="drago-container">
-    <img id="drago" src="drako.png" alt="Drago" />
+    <img id="drago" src="./Dragon.png" alt="Drago" />
   </div>
   <div id="counter">Вы заработали: 0 Drago</div>
   <div id="level">Уровень: 1</div>
@@ -144,6 +150,13 @@
     <p>Заработайте больше Drago, чтобы улучшить уровень.</p>
     <button id="close-error-modal">Закрыть</button>
   </div>
+
+  <div id="rating-modal">
+    <h2>Рейтинг игроков</h2>
+    <ul id="rating-list"></ul>
+    <button id="close-rating-modal">Закрыть</button>
+  </div>
+
   <div id="overlay"></div>
 
   <script>
@@ -158,8 +171,17 @@
     const bonusButton = document.getElementById('bonus-btn');
     const ratingButton = document.getElementById('rating-btn');
     const errorModal = document.getElementById('error-modal');
-    const closeModalButton = document.getElementById('close-error-modal');
+    const closeErrorModal = document.getElementById('close-error-modal');
+    const ratingModal = document.getElementById('rating-modal');
+    const closeRatingModal = document.getElementById('close-rating-modal');
     const overlay = document.getElementById('overlay');
+    const ratingList = document.getElementById('rating-list');
+
+    const username = Telegram.WebApp.initDataUnsafe.user?.username || "Player";
+    let playerData = JSON.parse(localStorage.getItem('playerData')) || {};
+    if (!playerData[username]) {
+      playerData[username] = { score: dragoCount, level: level };
+    }
 
     const updateUI = () => {
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
@@ -168,11 +190,22 @@
     };
 
     const saveGameData = () => {
+      playerData[username] = { score: dragoCount, level: level };
+      localStorage.setItem('playerData', JSON.stringify(playerData));
       localStorage.setItem('dragoCount', dragoCount);
       localStorage.setItem('level', level);
     };
 
+    const updateRating = () => {
+      const players = Object.entries(playerData)
+        .sort(([, a], [, b]) => b.score - a.score);
+      ratingList.innerHTML = players
+        .map(([name, { score }]) => `<li>${name}: ${score} Drago</li>`)
+        .join('');
+    };
+
     updateUI();
+    updateRating();
 
     drago.addEventListener('click', () => {
       dragoCount += level;
@@ -187,20 +220,38 @@
         saveGameData();
         updateUI();
       } else {
-        // Показать модальное окно
         errorModal.style.display = 'block';
         overlay.style.display = 'block';
       }
     });
 
-    closeModalButton.addEventListener('click', () => {
-      // Скрыть модальное окно
+    ratingButton.addEventListener('click', () => {
+      updateRating();
+      ratingModal.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+
+    bonusButton.addEventListener('click', () => {
+      bonusButton.disabled = true;
+      bonusButton.textContent = "Бонус активирован!";
+      dragoCount += 100;
+      saveGameData();
+      updateUI();
+    });
+
+    closeErrorModal.addEventListener('click', () => {
       errorModal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    closeRatingModal.addEventListener('click', () => {
+      ratingModal.style.display = 'none';
       overlay.style.display = 'none';
     });
 
     overlay.addEventListener('click', () => {
       errorModal.style.display = 'none';
+      ratingModal.style.display = 'none';
       overlay.style.display = 'none';
     });
   </script>
