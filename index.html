@@ -112,19 +112,29 @@
 
     // Локальный рейтинг
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    let playerName = 'Игрок'; // Имя по умолчанию
+    let playerName = localStorage.getItem('playerName') || null; // Загружаем имя из localStorage
 
     // Telegram WebApp API: получение данных профиля
     const tg = window.Telegram.WebApp;
     tg.ready(); // Подготовка интерфейса
 
-    if (tg.initDataUnsafe?.user) {
-      playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
-      if (tg.initDataUnsafe.user.username === 'ADMIN1') {
-        document.getElementById('admin-section').style.display = 'block'; // Показать кнопку очистки для ADMIN1
+    // Если имя не сохранено, запрос через Telegram API
+    if (!playerName) {
+      if (tg.initDataUnsafe?.user) {
+        playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
+        localStorage.setItem('playerName', playerName); // Сохранение имени
+        if (tg.initDataUnsafe.user.username === 'ADMIN1') {
+          document.getElementById('admin-section').style.display = 'block'; // Показать кнопку очистки для ADMIN1
+        }
+      } else {
+        alert('Telegram Web App API недоступен.');
+        playerName = 'Игрок';
       }
     } else {
-      alert('Telegram Web App API недоступен.');
+      // Если ADMIN1 уже сохранен
+      if (playerName === 'ADMIN1') {
+        document.getElementById('admin-section').style.display = 'block';
+      }
     }
 
     // Элементы
