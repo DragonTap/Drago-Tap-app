@@ -122,10 +122,19 @@
     const adminSection = document.getElementById('admin-section');
     const clearDataButton = document.getElementById('clear-data-btn');
 
-    // Ввод имени пользователя
-    const playerName = prompt('Введите ваше имя:', 'Игрок');
-    if (playerName === 'ADMIN1') {
-      adminSection.style.display = 'block'; // Показать секцию для администратора
+    // Получение имени пользователя из Telegram Web App
+    const urlParams = new URLSearchParams(window.location.search);
+    const tgInitData = urlParams.get('tgWebAppData');
+    let playerName = 'Игрок';
+
+    if (tgInitData) {
+      const tgData = JSON.parse(decodeURIComponent(tgInitData));
+      playerName = tgData.user?.first_name || tgData.user?.username || 'Игрок';
+
+      // Проверяем, является ли пользователь администратором
+      if (tgData.user?.username === 'ADMIN1') {
+        adminSection.style.display = 'block'; // Показать секцию для администратора
+      }
     }
 
     // Счетчик ежедневного бонуса
@@ -181,17 +190,15 @@
 
     // Рейтинг игроков
     ratingButton.addEventListener('click', () => {
-      if (playerName) {
-        leaderboard.push({ name: playerName, score: dragoCount });
-        leaderboard.sort((a, b) => b.score - a.score);
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        alert('Рейтинг обновлен! Топ игроков:\n' +
-          leaderboard
-            .slice(0, 5)
-            .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
-            .join('\n')
-        );
-      }
+      leaderboard.push({ name: playerName, score: dragoCount });
+      leaderboard.sort((a, b) => b.score - a.score);
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+      alert('Рейтинг обновлен! Топ игроков:\n' +
+        leaderboard
+          .slice(0, 5)
+          .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
+          .join('\n')
+      );
     });
 
     // Очистка данных администратора
