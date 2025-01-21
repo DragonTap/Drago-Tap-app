@@ -14,26 +14,31 @@
     }
     h1 {
       color: #5a3d00;
+      margin: 10px 0;
     }
     #drago {
       width: 150px;
+      margin-top: 20px;
       cursor: pointer;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s;
-    }
-    #drago:active {
-      transform: translate(-50%, -50%) scale(1.2);
     }
     #counter, #level {
       font-size: 20px;
       margin: 10px 0;
     }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
     #shop {
-      margin-top: 20px;
-      padding: 10px;
+      padding: 10px 15px;
       background-color: #ffd700;
       color: #333;
       border: none;
@@ -44,26 +49,17 @@
     #shop:hover {
       background-color: #ffcc00;
     }
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #333;
+    .footer-button {
+      padding: 10px 15px;
+      background-color: #5a3d00;
       color: #fff;
-      padding: 10px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
     }
-    #bonus, #leaderboard {
-      margin: 5px 0;
-    }
-    #leaderboard ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    #leaderboard li {
-      font-size: 14px;
-      margin: 3px 0;
+    .footer-button:hover {
+      background-color: #4e3200;
     }
   </style>
 </head>
@@ -72,17 +68,11 @@
   <img id="drago" src="https://i.imgur.com/3UP3FxP.png" alt="Drago" />
   <div id="counter">Вы заработали: 0 Drago</div>
   <div id="level">Уровень: 1</div>
-  <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
 
   <footer>
-    <div id="bonus">
-      <button id="bonus-btn">Получить ежедневный бонус</button>
-      <p id="bonus-message"></p>
-    </div>
-    <div id="leaderboard">
-      <h3>Рейтинг игроков</h3>
-      <ul id="leaderboard-list"></ul>
-    </div>
+    <button class="footer-button" id="rating-btn">Рейтинг</button>
+    <button class="footer-button" id="bonus-btn">Ежедневный бонус</button>
+    <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
   </footer>
 
   <script>
@@ -100,32 +90,21 @@
     const levelDisplay = document.getElementById('level');
     const shopButton = document.getElementById('shop');
     const bonusButton = document.getElementById('bonus-btn');
-    const bonusMessage = document.getElementById('bonus-message');
-    const leaderboardList = document.getElementById('leaderboard-list');
+    const ratingButton = document.getElementById('rating-btn');
 
     // Счетчик ежедневного бонуса
     const lastBonus = localStorage.getItem('lastBonus') || 0;
     const ONE_DAY = 24 * 60 * 60 * 1000;
-
-    // Инициализация
-    const updateLeaderboard = () => {
-      leaderboard.sort((a, b) => b.score - a.score);
-      leaderboardList.innerHTML = leaderboard
-        .slice(0, 5)
-        .map(player => `<li>${player.name}: ${player.score} Drago</li>`)
-        .join('');
-    };
-    updateLeaderboard();
 
     // Проверка бонуса
     const checkBonus = () => {
       const now = new Date().getTime();
       if (now - lastBonus > ONE_DAY) {
         bonusButton.disabled = false;
-        bonusMessage.textContent = '';
+        bonusButton.textContent = 'Ежедневный бонус';
       } else {
         bonusButton.disabled = true;
-        bonusMessage.textContent = 'Бонус уже получен! Попробуйте завтра.';
+        bonusButton.textContent = 'Бонус уже получен!';
       }
     };
     checkBonus();
@@ -137,14 +116,6 @@
       localStorage.setItem('lastBonus', new Date().getTime());
       checkBonus();
     });
-
-    // Анимация дракона
-    setInterval(() => {
-      const x = Math.random() * (window.innerWidth - 150);
-      const y = Math.random() * (window.innerHeight - 150);
-      drago.style.left = `${x}px`;
-      drago.style.top = `${y}px`;
-    }, 2000);
 
     // Клик по дракону
     drago.addEventListener('click', () => {
@@ -165,11 +136,20 @@
       }
     });
 
-    // Обновление рейтинга
-    window.addEventListener('beforeunload', () => {
+    // Рейтинг игроков
+    ratingButton.addEventListener('click', () => {
       const playerName = prompt('Введите ваше имя:', 'Игрок');
-      leaderboard.push({ name: playerName || 'Игрок', score: dragoCount });
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+      if (playerName) {
+        leaderboard.push({ name: playerName, score: dragoCount });
+        leaderboard.sort((a, b) => b.score - a.score);
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        alert('Рейтинг обновлен! Топ игроков:\n' +
+          leaderboard
+            .slice(0, 5)
+            .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
+            .join('\n')
+        );
+      }
     });
   </script>
 </body>
