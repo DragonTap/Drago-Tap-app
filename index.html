@@ -69,6 +69,21 @@
       background-color: #777;
       cursor: not-allowed;
     }
+    #admin-section {
+      margin-top: 20px;
+    }
+    #clear-data-btn {
+      padding: 10px 15px;
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #clear-data-btn:hover {
+      background-color: #ff0000;
+    }
   </style>
 </head>
 <body>
@@ -82,6 +97,11 @@
     <button class="footer-button" id="bonus-btn">Ежедневный бонус</button>
     <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
   </footer>
+
+  <!-- Секция для администратора -->
+  <div id="admin-section" style="display: none;">
+    <button id="clear-data-btn">Очистить всех пользователей</button>
+  </div>
 
   <script>
     // Переменные
@@ -99,6 +119,14 @@
     const shopButton = document.getElementById('shop');
     const bonusButton = document.getElementById('bonus-btn');
     const ratingButton = document.getElementById('rating-btn');
+    const adminSection = document.getElementById('admin-section');
+    const clearDataButton = document.getElementById('clear-data-btn');
+
+    // Ввод имени пользователя
+    const playerName = prompt('Введите ваше имя:', 'Игрок');
+    if (playerName === 'ADMIN1') {
+      adminSection.style.display = 'block'; // Показать секцию для администратора
+    }
 
     // Счетчик ежедневного бонуса
     const lastBonus = localStorage.getItem('lastBonus') || 0;
@@ -153,7 +181,6 @@
 
     // Рейтинг игроков
     ratingButton.addEventListener('click', () => {
-      const playerName = prompt('Введите ваше имя:', 'Игрок');
       if (playerName) {
         leaderboard.push({ name: playerName, score: dragoCount });
         leaderboard.sort((a, b) => b.score - a.score);
@@ -164,6 +191,15 @@
             .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
             .join('\n')
         );
+      }
+    });
+
+    // Очистка данных администратора
+    clearDataButton.addEventListener('click', () => {
+      if (confirm('Вы уверены, что хотите очистить все данные?')) {
+        localStorage.clear();
+        alert('Все данные очищены!');
+        location.reload(); // Перезагрузка страницы
       }
     });
   </script>
