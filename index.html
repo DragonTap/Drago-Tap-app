@@ -84,6 +84,43 @@
     #clear-data-btn:hover {
       background-color: #ff0000;
     }
+    #rating-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 400px;
+      text-align: left;
+    }
+    #rating-modal h2 {
+      margin-top: 0;
+    }
+    #rating-modal ul {
+      list-style: none;
+      padding: 0;
+    }
+    #rating-modal ul li {
+      margin: 5px 0;
+    }
+    #close-modal {
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #close-modal:hover {
+      background-color: #ff0000;
+    }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -101,6 +138,12 @@
 
   <div id="admin-section" style="display: none;">
     <button id="clear-data-btn">Очистить всех пользователей</button>
+  </div>
+
+  <div id="rating-modal">
+    <h2>Рейтинг игроков</h2>
+    <ul id="rating-list"></ul>
+    <button id="close-modal">Закрыть</button>
   </div>
 
   <script>
@@ -135,6 +178,9 @@
     const bonusButton = document.getElementById('bonus-btn');
     const ratingButton = document.getElementById('rating-btn');
     const clearDataButton = document.getElementById('clear-data-btn');
+    const ratingModal = document.getElementById('rating-modal');
+    const ratingList = document.getElementById('rating-list');
+    const closeModalButton = document.getElementById('close-modal');
 
     const updateUI = () => {
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
@@ -201,12 +247,15 @@
       leaderboard.sort((a, b) => b.score - a.score);
       localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-      alert('Рейтинг обновлен! Топ игроков:\n' +
-        leaderboard
-          .slice(0, 5)
-          .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
-          .join('\n')
-      );
+      ratingList.innerHTML = leaderboard
+        .slice(0, 5)
+        .map((player, i) => `<li>${i + 1}. ${player.name}: ${player.score} Drago</li>`)
+        .join('');
+      ratingModal.style.display = 'block';
+    });
+
+    closeModalButton.addEventListener('click', () => {
+      ratingModal.style.display = 'none';
     });
 
     clearDataButton.addEventListener('click', () => {
