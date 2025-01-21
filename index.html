@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drago Clicker</title>
+  <title>Drago Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -81,6 +81,43 @@
       background-color: #777;
       cursor: not-allowed;
     }
+    #rating-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 400px;
+      text-align: left;
+    }
+    #rating-modal h2 {
+      margin-top: 0;
+    }
+    #rating-modal ul {
+      list-style: none;
+      padding: 0;
+    }
+    #rating-modal ul li {
+      margin: 5px 0;
+    }
+    #close-modal {
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #close-modal:hover {
+      background-color: #ff0000;
+    }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -96,13 +133,31 @@
     <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
   </footer>
 
+  <div id="rating-modal">
+    <h2>Рейтинг игроков</h2>
+    <ul id="rating-list"></ul>
+    <button id="close-modal">Закрыть</button>
+  </div>
+
   <script>
     let dragoCount = parseInt(localStorage.getItem('dragoCount')) || 0;
     let level = parseInt(localStorage.getItem('level')) || 1;
     const levelCost = 50;
 
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    let playerName = localStorage.getItem('playerName') || null;
+
     const tg = window.Telegram.WebApp;
     tg.ready();
+
+    if (!playerName) {
+      if (tg.initDataUnsafe?.user) {
+        playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
+        localStorage.setItem('playerName', playerName);
+      } else {
+        playerName = 'Игрок';
+      }
+    }
 
     const drago = document.getElementById('drago');
     const counter = document.getElementById('counter');
@@ -110,6 +165,9 @@
     const shopButton = document.getElementById('shop');
     const bonusButton = document.getElementById('bonus-btn');
     const ratingButton = document.getElementById('rating-btn');
+    const ratingModal = document.getElementById('rating-modal');
+    const ratingList = document.getElementById('rating-list');
+    const closeModalButton = document.getElementById('close-modal');
 
     const updateUI = () => {
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
@@ -160,7 +218,25 @@
     });
 
     ratingButton.addEventListener('click', () => {
-      alert('Рейтинг еще не реализован!');
+      const existingPlayer = leaderboard.find((player) => player.name === playerName);
+      if (existingPlayer) {
+        existingPlayer.score = dragoCount;
+      } else {
+        leaderboard.push({ name: playerName, score: dragoCount });
+      }
+
+      leaderboard.sort((a, b) => b.score - a.score);
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+      ratingList.innerHTML = leaderboard
+        .slice(0, 5)
+        .map((player, i) => `<li>${i + 1}. ${player.name}: ${player.score} Drago</li>`)
+        .join('');
+      ratingModal.style.display = 'block';
+    });
+
+    closeModalButton.addEventListener('click', () => {
+      ratingModal.style.display = 'none';
     });
   </script>
 </body>
