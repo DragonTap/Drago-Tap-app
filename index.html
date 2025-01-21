@@ -1,214 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drago Clicker</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f9f5d7;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      color: #5a3d00;
-      margin: 10px 0;
-    }
-    #drago {
-      width: 150px;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: transform 0.1s ease;
-    }
-    #drago:active {
-      transform: scale(1.2);
-    }
-    #counter, #level {
-      font-size: 20px;
-      margin: 10px 0;
-    }
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #333;
-      color: #fff;
-      padding: 15px 0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-    #shop {
-      padding: 10px 15px;
-      background-color: #ffd700;
-      color: #333;
-      border: none;
-      border-radius: 5px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    #shop:hover {
-      background-color: #ffcc00;
-    }
-    .footer-button {
-      padding: 10px 15px;
-      background-color: #5a3d00;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .footer-button:hover {
-      background-color: #4e3200;
-    }
-    .footer-button:disabled {
-      background-color: #777;
-      cursor: not-allowed;
-    }
-    #admin-section {
-      margin-top: 20px;
-    }
-    #clear-data-btn {
-      padding: 10px 15px;
-      background-color: #ff4c4c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #clear-data-btn:hover {
-      background-color: #ff0000;
-    }
-  </style>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-<body>
-  <h1>Drago Clicker</h1>
-  <img id="drago" src="https://i.imgur.com/3UP3FxP.png" alt="Drago" />
-  <div id="counter">Вы заработали: 0 Drago</div>
-  <div id="level">Уровень: 1</div>
+<script>
+  let dragoCount = parseInt(localStorage.getItem('dragoCount')) || 0;
+  let level = parseInt(localStorage.getItem('level')) || 1;
+  const levelCost = 50;
 
-  <footer>
-    <button class="footer-button" id="rating-btn">Рейтинг</button>
-    <button class="footer-button" id="bonus-btn">Ежедневный бонус</button>
-    <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
-  </footer>
+  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+  let playerName = localStorage.getItem('playerName') || null;
 
-  <div id="admin-section" style="display: none;">
-    <button id="clear-data-btn">Очистить всех пользователей</button>
-  </div>
+  const tg = window.Telegram.WebApp;
+  tg.ready();
 
-  <script>
-    let dragoCount = parseInt(localStorage.getItem('dragoCount')) || 0;
-    let level = parseInt(localStorage.getItem('level')) || 1;
-    const levelCost = 50;
-
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    let playerName = localStorage.getItem('playerName') || null;
-
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-
-    if (!playerName) {
-      if (tg.initDataUnsafe?.user) {
-        playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
-        localStorage.setItem('playerName', playerName);
-        if (tg.initDataUnsafe.user.username === 'ADMIN1') {
-          document.getElementById('admin-section').style.display = 'block';
-        }
-      } else {
-        playerName = 'Игрок';
+  if (!playerName) {
+    if (tg.initDataUnsafe?.user) {
+      playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
+      localStorage.setItem('playerName', playerName);
+      if (tg.initDataUnsafe.user.username === 'ADMIN1') {
+        document.getElementById('admin-section').style.display = 'block';
       }
-    } else if (playerName === 'ADMIN1') {
-      document.getElementById('admin-section').style.display = 'block';
+    } else {
+      playerName = 'Игрок';
     }
+  } else if (playerName === 'ADMIN1') {
+    document.getElementById('admin-section').style.display = 'block';
+  }
 
-    const drago = document.getElementById('drago');
-    const counter = document.getElementById('counter');
-    const levelDisplay = document.getElementById('level');
-    const shopButton = document.getElementById('shop');
-    const bonusButton = document.getElementById('bonus-btn');
-    const ratingButton = document.getElementById('rating-btn');
-    const clearDataButton = document.getElementById('clear-data-btn');
+  const drago = document.getElementById('drago');
+  const counter = document.getElementById('counter');
+  const levelDisplay = document.getElementById('level');
+  const shopButton = document.getElementById('shop');
+  const bonusButton = document.getElementById('bonus-btn');
+  const ratingButton = document.getElementById('rating-btn');
+  const clearDataButton = document.getElementById('clear-data-btn');
 
-    const updateUI = () => {
-      counter.textContent = `Вы заработали: ${dragoCount} Drago`;
-      levelDisplay.textContent = `Уровень: ${level}`;
-      shopButton.textContent = `Улучшить уровень (Стоимость: ${levelCost * level} Drago)`;
-    };
+  const updateUI = () => {
+    counter.textContent = `Вы заработали: ${dragoCount} Drago`;
+    levelDisplay.textContent = `Уровень: ${level}`;
+    shopButton.textContent = `Улучшить уровень (Стоимость: ${levelCost * level} Drago)`;
+  };
 
-    const saveGameData = () => {
-      localStorage.setItem('dragoCount', dragoCount);
-      localStorage.setItem('level', level);
-    };
+  const saveGameData = () => {
+    localStorage.setItem('dragoCount', dragoCount);
+    localStorage.setItem('level', level);
+  };
 
+  updateUI();
+
+  const lastBonus = localStorage.getItem('lastBonus') || 0;
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+
+  const checkBonus = () => {
+    const now = new Date().getTime();
+    if (now - lastBonus > ONE_DAY) {
+      bonusButton.disabled = false;
+      bonusButton.textContent = 'Ежедневный бонус';
+    } else {
+      bonusButton.disabled = true;
+      bonusButton.textContent = 'Бонус уже получен!';
+    }
+  };
+  checkBonus();
+
+  bonusButton.addEventListener('click', () => {
+    if (bonusButton.disabled) return;
+    dragoCount += 100;
+    saveGameData();
     updateUI();
-
-    const lastBonus = localStorage.getItem('lastBonus') || 0;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-
-    const checkBonus = () => {
-      const now = new Date().getTime();
-      if (now - lastBonus > ONE_DAY) {
-        bonusButton.disabled = false;
-        bonusButton.textContent = 'Ежедневный бонус';
-      } else {
-        bonusButton.disabled = true;
-        bonusButton.textContent = 'Бонус уже получен!';
-      }
-    };
+    localStorage.setItem('lastBonus', new Date().getTime());
     checkBonus();
+  });
 
-    bonusButton.addEventListener('click', () => {
-      if (bonusButton.disabled) return;
-      dragoCount += 100;
+  drago.addEventListener('click', () => {
+    dragoCount += level;
+    saveGameData();
+    updateUI();
+  });
+
+  shopButton.addEventListener('click', () => {
+    if (dragoCount >= levelCost * level) {
+      dragoCount -= levelCost * level;
+      level++;
       saveGameData();
       updateUI();
-      localStorage.setItem('lastBonus', new Date().getTime());
-      checkBonus();
-    });
+    } else {
+      alert('Недостаточно Drago для улучшения!');
+    }
+  });
 
-    drago.addEventListener('click', () => {
-      dragoCount += level;
-      saveGameData();
-      updateUI();
-    });
+  // Обновленный обработчик для рейтинга
+  ratingButton.addEventListener('click', () => {
+    const existingPlayer = leaderboard.find((player) => player.name === playerName);
+    if (existingPlayer) {
+      existingPlayer.score = dragoCount; // Обновляем очки, если игрок уже есть
+    } else {
+      leaderboard.push({ name: playerName, score: dragoCount }); // Добавляем нового игрока
+    }
 
-    shopButton.addEventListener('click', () => {
-      if (dragoCount >= levelCost * level) {
-        dragoCount -= levelCost * level;
-        level++;
-        saveGameData();
-        updateUI();
-      } else {
-        alert('Недостаточно Drago для улучшения!');
-      }
-    });
+    leaderboard.sort((a, b) => b.score - a.score); // Сортировка по очкам
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-    ratingButton.addEventListener('click', () => {
-      leaderboard.push({ name: playerName, score: dragoCount });
-      leaderboard.sort((a, b) => b.score - a.score);
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-      alert('Рейтинг обновлен! Топ игроков:\n' +
-        leaderboard
-          .slice(0, 5)
-          .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
-          .join('\n')
-      );
-    });
+    // Отображение топа игроков
+    alert('Рейтинг обновлен! Топ игроков:\n' +
+      leaderboard
+        .slice(0, 5)
+        .map((player, i) => `${i + 1}. ${player.name}: ${player.score} Drago`)
+        .join('\n')
+    );
+  });
 
-    clearDataButton.addEventListener('click', () => {
-      if (confirm('Вы уверены, что хотите очистить все данные?')) {
-        localStorage.clear();
-        alert('Все данные очищены!');
-        location.reload();
-      }
-    });
-  </script>
-</body>
-</html>
+  clearDataButton.addEventListener('click', () => {
+    if (confirm('Вы уверены, что хотите очистить все данные?')) {
+      localStorage.clear();
+      alert('Все данные очищены!');
+      location.reload();
+    }
+  });
+</script>
