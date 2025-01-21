@@ -20,6 +20,10 @@
       width: 150px;
       margin-top: 20px;
       cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    #drago:active {
+      transform: scale(1.2);
     }
     #counter, #level {
       font-size: 20px;
@@ -60,6 +64,10 @@
     }
     .footer-button:hover {
       background-color: #4e3200;
+    }
+    .footer-button:disabled {
+      background-color: #777;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -111,16 +119,23 @@
 
     // Ежедневный бонус
     bonusButton.addEventListener('click', () => {
+      if (bonusButton.disabled) return; // Ограничение на повторный бонус
       dragoCount += 100; // Бонус
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
       localStorage.setItem('lastBonus', new Date().getTime());
       checkBonus();
     });
 
-    // Клик по дракону
+    // Клик по дракону с анимацией
     drago.addEventListener('click', () => {
       dragoCount += level;
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
+
+      // Плавная анимация
+      drago.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        drago.style.transform = 'scale(1)';
+      }, 100);
     });
 
     // Покупка уровня
