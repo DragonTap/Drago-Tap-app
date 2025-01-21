@@ -81,7 +81,7 @@
       background-color: #777;
       cursor: not-allowed;
     }
-    #rating-modal {
+    #error-modal {
       display: none;
       position: fixed;
       top: 50%;
@@ -93,19 +93,16 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       width: 80%;
       max-width: 400px;
-      text-align: left;
+      text-align: center;
+      z-index: 1000;
     }
-    #rating-modal h2 {
-      margin-top: 0;
+    #error-modal h2 {
+      margin: 0 0 10px;
     }
-    #rating-modal ul {
-      list-style: none;
-      padding: 0;
+    #error-modal p {
+      margin: 10px 0;
     }
-    #rating-modal ul li {
-      margin: 5px 0;
-    }
-    #close-modal {
+    #close-error-modal {
       background-color: #ff4c4c;
       color: white;
       border: none;
@@ -113,17 +110,26 @@
       padding: 10px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
     }
-    #close-modal:hover {
+    #close-error-modal:hover {
       background-color: #ff0000;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
     }
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div id="drago-container">
-    <img id="drago" src="drako.png" alt="Drago" />
+    <img id="drago" src="./Dragon.png" alt="Drago" />
   </div>
   <div id="counter">Вы заработали: 0 Drago</div>
   <div id="level">Уровень: 1</div>
@@ -133,31 +139,17 @@
     <button id="shop">Улучшить уровень (Стоимость: 50 Drago)</button>
   </footer>
 
-  <div id="rating-modal">
-    <h2>Рейтинг игроков</h2>
-    <ul id="rating-list"></ul>
-    <button id="close-modal">Закрыть</button>
+  <div id="error-modal">
+    <h2>Недостаточно Drago!</h2>
+    <p>Заработайте больше Drago, чтобы улучшить уровень.</p>
+    <button id="close-error-modal">Закрыть</button>
   </div>
+  <div id="overlay"></div>
 
   <script>
     let dragoCount = parseInt(localStorage.getItem('dragoCount')) || 0;
     let level = parseInt(localStorage.getItem('level')) || 1;
     const levelCost = 50;
-
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    let playerName = localStorage.getItem('playerName') || null;
-
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-
-    if (!playerName) {
-      if (tg.initDataUnsafe?.user) {
-        playerName = tg.initDataUnsafe.user.first_name || 'Игрок';
-        localStorage.setItem('playerName', playerName);
-      } else {
-        playerName = 'Игрок';
-      }
-    }
 
     const drago = document.getElementById('drago');
     const counter = document.getElementById('counter');
@@ -165,9 +157,9 @@
     const shopButton = document.getElementById('shop');
     const bonusButton = document.getElementById('bonus-btn');
     const ratingButton = document.getElementById('rating-btn');
-    const ratingModal = document.getElementById('rating-modal');
-    const ratingList = document.getElementById('rating-list');
-    const closeModalButton = document.getElementById('close-modal');
+    const errorModal = document.getElementById('error-modal');
+    const closeModalButton = document.getElementById('close-error-modal');
+    const overlay = document.getElementById('overlay');
 
     const updateUI = () => {
       counter.textContent = `Вы заработали: ${dragoCount} Drago`;
@@ -195,48 +187,21 @@
         saveGameData();
         updateUI();
       } else {
-        alert('Недостаточно Drago для улучшения!');
+        // Показать модальное окно
+        errorModal.style.display = 'block';
+        overlay.style.display = 'block';
       }
-    });
-
-    bonusButton.addEventListener('click', () => {
-      const lastBonus = localStorage.getItem('lastBonus') || 0;
-      const ONE_DAY = 24 * 60 * 60 * 1000;
-      const now = new Date().getTime();
-
-      if (now - lastBonus > ONE_DAY) {
-        dragoCount += 100;
-        localStorage.setItem('lastBonus', now);
-        saveGameData();
-        updateUI();
-        bonusButton.disabled = true;
-        bonusButton.textContent = 'Бонус уже получен!';
-      } else {
-        bonusButton.disabled = true;
-        bonusButton.textContent = 'Бонус уже получен!';
-      }
-    });
-
-    ratingButton.addEventListener('click', () => {
-      const existingPlayer = leaderboard.find((player) => player.name === playerName);
-      if (existingPlayer) {
-        existingPlayer.score = dragoCount;
-      } else {
-        leaderboard.push({ name: playerName, score: dragoCount });
-      }
-
-      leaderboard.sort((a, b) => b.score - a.score);
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-
-      ratingList.innerHTML = leaderboard
-        .slice(0, 5)
-        .map((player, i) => `<li>${i + 1}. ${player.name}: ${player.score} Drago</li>`)
-        .join('');
-      ratingModal.style.display = 'block';
     });
 
     closeModalButton.addEventListener('click', () => {
-      ratingModal.style.display = 'none';
+      // Скрыть модальное окно
+      errorModal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    overlay.addEventListener('click', () => {
+      errorModal.style.display = 'none';
+      overlay.style.display = 'none';
     });
   </script>
 </body>
