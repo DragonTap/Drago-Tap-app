@@ -1,4 +1,273 @@
-shopButton.addEventListener('click', () => {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drago Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: black; /* Changed background color */
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    #drago-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #drago {
+      width: 90%;
+      max-width: 500px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+      background-size: cover; /* Added property */
+    }
+    #drago:active {
+      transform: scale(1.1);
+    }
+    #counter, #level {
+      font-size: 20px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 15px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .footer-button, #shop { /* Added class to both buttons */
+      padding: 15px 25px; /* Increased padding */
+      width: 300px; /* Increased width */
+      height: 80px; /* Increased height */
+      background-color: #5a3d00;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px; /* Increased font size */
+      cursor: pointer;
+      text-align: center; /* Added text-align: center */
+    }
+    #shop {
+      background-color: #ffd700;
+      color: #333;
+    }
+    .footer-button:hover {
+      background-color: #4e3200;
+    }
+    #shop:hover {
+      background-color: #ffcc00;
+    }
+    .footer-button:disabled {
+      background-color: #777;
+      cursor: not-allowed;
+    }
+    #error-modal, #rating-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      z-index: 1000;
+    }
+    #error-modal h2, #rating-modal h2 {
+      margin: 0 0 10px;
+    }
+    #error-modal p, #rating-modal ul {
+      margin: 10px 0;
+      padding: 0;
+      list-style-type: none;
+      text-align: left;
+    }
+    #rating-modal ul li {
+      margin: 5px 0;
+    }
+    #close-error-modal, #close-rating-modal {
+      background-color: #ff4c4c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #close-error-modal:hover, #close-rating-modal:hover {
+      background-color: #ff0000;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+    #score-table {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    #score-table td {
+      text-align: center;
+      font-size: 18px;
+    }
+    #score-table td:first-child {
+      text-align: left;
+    }
+    #score {
+      color: red;
+    }
+    #energy-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #333;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    #energy-fill {
+      height: 100%;
+      background-color: #0f0;
+      border-radius: 5px;
+      transition: width 0.5s ease; /* Add a smooth transition for the energy bar */}
+  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="drago-container">
+    <img id="drago" src="https://i.ibb.co/0Fd55Md/dragon-no-background-removebg-preview.png" alt="Drago" />
+  </div>
+  <div id="counter">Вы заработали: 0 Drago</div>
+  <div id="level">Уровень: 1</div>
+  <footer>
+    <button class="footer-button" id="rating-btn">Рейтинг</button>
+    <button class="footer-button" id="bonus-btn">Ежедневный бонус</button>
+    <button id="shop">Улучшить </button>
+  </footer>
+
+  <div id="error-modal">
+    <h2>Недостаточно Drago!</h2>
+    <p>Заработайте больше Drago, чтобы улучшить уровень.</p>
+    <button id="close-error-modal">Закрыть</button>
+  </div>
+
+  <div id="rating-modal">
+    <h2>Рейтинг игроков</h2>
+    <ul id="rating-list"></ul>
+    <button id="close-rating-modal">Закрыть</button>
+  </div>
+
+  <div id="overlay"></div>
+
+  <table id="score-table">
+    <tr>
+      <td>Очки:</td>
+      <td id="score">0</td>
+    </tr>
+  </table>
+
+  <div id="energy-bar">
+    <div id="energy-fill"></div>
+  </div>
+
+  <script>
+    let dragoCount = parseInt(localStorage.getItem('dragoCount')) || 0;
+    let level = parseInt(localStorage.getItem('level')) || 1;
+    const levelCost = 50;
+    let energy = 1000; // Initial energy
+
+    const drago = document.getElementById('drago');
+    const counter = document.getElementById('counter');
+    const levelDisplay = document.getElementById('level');
+    const shopButton = document.getElementById('shop');
+    const bonusButton = document.getElementById('bonus-btn');
+    const ratingButton = document.getElementById('rating-btn');
+    const errorModal = document.getElementById('error-modal');
+    const closeErrorModal = document.getElementById('close-error-modal');
+    const ratingModal = document.getElementById('rating-modal');
+    const closeRatingModal = document.getElementById('close-rating-modal');
+    const overlay = document.getElementById('overlay');
+    const ratingList = document.getElementById('rating-list');
+    const score = document.getElementById('score');
+    const energyBar = document.getElementById('energy-bar');
+    const energyFill = document.getElementById('energy-fill');
+
+    const username = Telegram.WebApp.initDataUnsafe.user?.username || "Player";
+    let playerData = JSON.parse(localStorage.getItem('playerData')) || {};
+    if (!playerData[username]) {
+      playerData[username] = { score: dragoCount, level: level };
+    }
+
+    const updateUI = () => {
+      counter.textContent = Вы заработали: ${dragoCount} Drago;
+      levelDisplay.textContent = Уровень: ${level};
+      shopButton.textContent = Улучшить (${levelCost * level} Drago); // Added the number of points needed
+      score.textContent = dragoCount;
+      updateEnergyBar();
+    };
+
+    const updateEnergyBar = () => {
+      energyFill.style.width = ${(energy / 1000) * 100}%;
+    };
+
+    const saveGameData = () => {
+      playerData[username] = { score: dragoCount, level: level };
+      localStorage.setItem('playerData', JSON.stringify(playerData));
+      localStorage.setItem('dragoCount', dragoCount);
+      localStorage.setItem('level', level);
+    };
+
+    const updateRating = () => {
+      const players = Object.entries(playerData)
+        .sort(([, a], [, b]) => b.score - a.score);
+      ratingList.innerHTML = players
+        .map(([name, { score }]) => <li>${name}: ${score} Drago</li>)
+        .join('');
+    };
+
+    updateUI();
+    updateRating();
+
+    drago.addEventListener('click', () => {
+      if (energy > 0) { // Check for energy
+        dragoCount += level;
+        energy -= level; // Deduct energy based on level
+        saveGameData();
+        updateUI();
+      } else {
+        alert("Недостаточно энергии!"); // Or display a message
+      }
+    });shopButton.addEventListener('click', () => {
       if (dragoCount >= levelCost * level) {
         dragoCount -= levelCost * level;
         level++;
