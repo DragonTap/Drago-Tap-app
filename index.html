@@ -289,11 +289,11 @@
     </div>
 
     <script>
-        const userAgent = navigator.userAgent.toLowerCase();
+        const platform = navigator.platform.toLowerCase();
         const blockedMessage = document.getElementById('blockedMessage');
         
         // Проверка на Telegram Desktop
-        if (!userAgent.includes("telegram") || !userAgent.includes("desktop")) {
+        if (!platform.includes('win') && !platform.includes('mac')) {
             document.body.style.display = 'none'; // скрываем контент
             blockedMessage.style.display = 'block'; // показываем сообщение
         }
