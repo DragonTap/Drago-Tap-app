@@ -26,7 +26,7 @@
             height: auto;
             cursor: pointer;
             margin-top: 20px;
-            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: transform 0.1s ease-in-out, box-shadow 0.2s;
             user-drag: none;
             -webkit-user-drag: none;
         }
@@ -64,6 +64,7 @@
             background-color: rgba(255, 255, 255, 0.2);
             border: 2px solid #f77f00;
             border-radius: 10px;
+            margin-top: 0;
             position: fixed;
             top: 0;
             z-index: 10;
@@ -71,9 +72,10 @@
         }
         #energy-fill {
             height: 100%;
+            width: 100%;
             background-color: #f77f00;
             border-radius: 10px;
-            transition: width 0.2s ease-in-out; /* Уменьшено время анимации */
+            transition: width 0.3s;
         }
         .score-animation {
             position: absolute;
@@ -103,13 +105,12 @@
             text-align: center;
             text-shadow: 0 0 5px #f77f00;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s ease-in-out;
+            transition: background-color 0.3s, transform 0.2s;
         }
         .button:hover {
             background-color: #f77f00;
             color: #000;
             transform: scale(1.1);
-            box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.8);
         }
         .button:active {
             transform: scale(1.05);
@@ -177,6 +178,18 @@
             background-color: #ff8c00;
         }
 
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
+            }
+        }
+
         @keyframes float-up {
             0% {
                 opacity: 1;
@@ -188,6 +201,10 @@
             }
         }
 
+        img:hover {
+            animation: glow 1.5s infinite;
+        }
+
         /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
             #counter {
@@ -196,10 +213,15 @@
                 right: 5%;
             }
 
-            img {
-                width: 70%;
+            /* Центрирование картинки дракона */
+            #dragonImage {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 70%; /* Уменьшаем размер картинки на мобильных устройствах */
                 max-width: 250px;
-                margin-top: 10px;
+                margin-top: 0;
             }
 
             .button-container {
@@ -248,7 +270,7 @@
             }
 
             img {
-                width: 80%;
+                width: 80%; /* Увеличена картинка дракона */
                 max-width: 200px;
                 margin-top: 10px;
             }
@@ -269,8 +291,8 @@
         <div id="energy-fill" style="width: 100%;"></div>
     </div>
     <div id="counter">
-        <span id="dragoCount">0</span>
-        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px;">
+        <span id="dragoCount">0</span> 
+        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;">
     </div>
     <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
 
@@ -315,22 +337,9 @@
         const buyUpgradeButton = document.getElementById("buyUpgradeButton");
         const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
 
-        let lastUpdateTime = Date.now();
-
         function updateEnergyBar() {
-            const currentTime = Date.now();
-            const timeDelta = (currentTime - lastUpdateTime) / 1000; // время в секундах
             const energyFill = document.getElementById("energy-fill");
-
-            // Восстановление энергии в реальном времени
-            energy = Math.min(100, energy + energyRegenerationSpeed * timeDelta);
-
-            // Обновляем ширину индикатора энергии плавно
-            const energyPercentage = (energy / 100) * 100;
-            energyFill.style.width = `${energyPercentage}%`;
-
-            // Обновляем время
-            lastUpdateTime = currentTime;
+            energyFill.style.width = `${(energy / 100) * 100}%`;
         }
 
         function addScoreAnimation(x, y, text) {
@@ -360,6 +369,7 @@
                 energy -= dragoPerClick;
                 dragoCount += dragoPerClick;
                 dragoCountSpan.innerText = formatNumber(dragoCount);
+                updateEnergyBar();
                 addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
             }
         });
@@ -396,13 +406,20 @@
             if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
                 rankingPanel.classList.remove("show");
             }
-
             if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
                 shopPanel.classList.remove("show");
             }
         });
 
-        setInterval(updateEnergyBar, 100); // обновление состояния энергии каждые 100 миллисекунд
+        function regenerateEnergy() {
+            if (energy < 100) {
+                energy += energyRegenerationSpeed / 60;
+                if (energy > 100) energy = 100;
+                updateEnergyBar();
+            }
+        }
+
+        setInterval(regenerateEnergy, 1000 / 60); // Обновляем энергию каждую секунду
     </script>
 </body>
 </html>
