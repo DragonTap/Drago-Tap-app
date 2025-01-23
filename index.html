@@ -41,30 +41,26 @@
     </div>
 
     <script>
-        // Проверяем, доступен ли Telegram.WebApp API
-        if (window.Telegram && window.Telegram.WebApp) {
-            // Пытаемся проверить Telegram Desktop через initDataUnsafe
-            if (window.Telegram.WebApp.initDataUnsafe) {
-                // Если это Telegram Desktop, показываем интерфейс игры
-                document.getElementById("message").innerText = "Нажимайте на кнопку, чтобы получать очки!";
-                
-                let score = 0;
-                const scoreElement = document.getElementById("score");
-                const tapButton = document.getElementById("tap-button");
-
-                tapButton.addEventListener("click", () => {
-                    score++;
-                    scoreElement.innerText = score;
-                });
-            } else {
-                // Если это не Telegram Desktop, выводим сообщение
-                document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
-                document.getElementById("game-container").style.display = "none";
-            }
-        } else {
-            // Если это не Telegram WebApp
-            document.getElementById("message").innerText = "Ошибка: приложение должно быть открыто в Telegram WebApp!";
+        // Проверка на мобильные устройства через userAgent
+        const userAgent = navigator.userAgent.toLowerCase();
+        
+        // Проверка, если это мобильная версия Telegram
+        if (userAgent.indexOf('telegram') !== -1 && (userAgent.indexOf('android') !== -1 || userAgent.indexOf('iphone') !== -1)) {
+            // Если это мобильная версия Telegram, скрываем интерфейс
+            document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
             document.getElementById("game-container").style.display = "none";
+        } else {
+            // Если это не мобильное устройство, показываем интерфейс
+            document.getElementById("message").innerText = "Нажимайте на кнопку, чтобы получать очки!";
+            
+            let score = 0;
+            const scoreElement = document.getElementById("score");
+            const tapButton = document.getElementById("tap-button");
+
+            tapButton.addEventListener("click", () => {
+                score++;
+                scoreElement.innerText = score;
+            });
         }
     </script>
 </body>
