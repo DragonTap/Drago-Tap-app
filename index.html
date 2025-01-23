@@ -41,10 +41,10 @@
     </div>
 
     <script>
-        // Проверка на Telegram WebApp
+        // Проверяем, доступен ли Telegram.WebApp API
         if (window.Telegram && window.Telegram.WebApp) {
-            // Проверка, если это Telegram Desktop
-            if (window.Telegram.WebApp.isDesktop) {
+            // Пытаемся проверить Telegram Desktop через initDataUnsafe
+            if (window.Telegram.WebApp.initDataUnsafe) {
                 // Если это Telegram Desktop, показываем интерфейс игры
                 document.getElementById("message").innerText = "Нажимайте на кнопку, чтобы получать очки!";
                 
@@ -57,7 +57,7 @@
                     scoreElement.innerText = score;
                 });
             } else {
-                // Если не Telegram Desktop, показываем сообщение
+                // Если это не Telegram Desktop, выводим сообщение
                 document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
                 document.getElementById("game-container").style.display = "none";
             }
