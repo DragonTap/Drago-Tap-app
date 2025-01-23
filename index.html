@@ -38,28 +38,28 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: rgba(255, 0, 0, 0.7);
+            background-color: rgba(255, 0, 0, 0.7); /* Красный фон */
             padding: 10px 20px;
             border-radius: 20px;
             font-size: 3vw;
             color: #fff;
             text-shadow: 0 0 10px #ff0000;
-            box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5); /* Тень для эффектности */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 90%;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center; /* Выровняем элементы по вертикали */
+            justify-content: center; /* Центрируем элементы по горизонтали */
         }
         #counter:hover {
-            background-color: rgba(255, 0, 0, 0.8);
-            box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6);
+            background-color: rgba(255, 0, 0, 0.8); /* При наведении */
+            box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6); /* Увеличение тени */
         }
         #energy-bar {
-            width: 50%;
+            width: 50%; /* Уменьшена панель энергии на 50% */
             height: 20px;
             background-color: rgba(255, 255, 255, 0.2);
             border: 2px solid #f77f00;
@@ -118,7 +118,7 @@
 
         .ranking-panel {
             position: fixed;
-            bottom: -40%;
+            bottom: -100%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
@@ -138,7 +138,7 @@
 
         .shop-panel {
             position: fixed;
-            bottom: -40%;
+            bottom: -100%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
@@ -213,15 +213,10 @@
                 right: 5%;
             }
 
-            /* Центрирование картинки дракона */
-            #dragonImage {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 70%; /* Уменьшаем размер картинки на мобильных устройствах */
+            img {
+                width: 70%; /* Увеличена картинка дракона */
                 max-width: 250px;
-                margin-top: 0;
+                margin-top: 10px;
             }
 
             .button-container {
@@ -291,8 +286,8 @@
         <div id="energy-fill" style="width: 100%;"></div>
     </div>
     <div id="counter">
-        <span id="dragoCount">0</span> 
-        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;">
+        <span id="dragoCount">0</span> <!-- Счетчик Драго -->
+        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;"> <!-- Сделали фон прозрачным -->
     </div>
     <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
 
@@ -406,20 +401,18 @@
             if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
                 rankingPanel.classList.remove("show");
             }
+
             if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
                 shopPanel.classList.remove("show");
             }
         });
 
-        function regenerateEnergy() {
+        setInterval(() => {
             if (energy < 100) {
-                energy += energyRegenerationSpeed / 60;
-                if (energy > 100) energy = 100;
+                energy += energyRegenerationSpeed;
                 updateEnergyBar();
             }
-        }
-
-        setInterval(regenerateEnergy, 1000 / 60); // Обновляем энергию каждую секунду
+        }, 1000);
     </script>
 </body>
 </html>
