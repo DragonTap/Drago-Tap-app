@@ -7,67 +7,57 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .game-container {
+            background-color: #121212;
+            color: white;
             text-align: center;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
-        .dragon-image {
-            width: 200px;
-            cursor: pointer;
-            transition: transform 0.2s;
+        #game-container {
+            margin-top: 50px;
         }
-        .dragon-image:active {
-            transform: scale(0.9);
-        }
-        .score {
-            font-size: 24px;
-            margin-top: 20px;
-        }
-        .btn {
-            padding: 10px 20px;
-            background-color: #4caf50;
+        .button {
+            background-color: #4CAF50;
             color: white;
+            padding: 15px 32px;
+            font-size: 16px;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
         }
-        .btn:hover {
+        .button:hover {
             background-color: #45a049;
+        }
+        #message {
+            font-size: 18px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Drago Tap</h1>
-        <img src="dragon.png" alt="Dragon" class="dragon-image" onclick="tapDragon()">
-        <div class="score">Score: <span id="score">0</span></div>
-        <button class="btn" onclick="upgrade()">Upgrade Dragon</button>
+    <h1>Добро пожаловать в Drago Tap!</h1>
+    <p id="message"></p>
+    <div id="game-container">
+        <button class="button" id="tap-button">Тапать!</button>
+        <p>Очки: <span id="score">0</span></p>
     </div>
 
     <script>
-        let score = 0;
+        // Проверка через userAgent
+        const userAgent = navigator.userAgent.toLowerCase();
+        const messageElement = document.getElementById("message");
 
-        // Функция клика по дракону
-        function tapDragon() {
-            score++;
-            document.getElementById('score').textContent = score;
-        }
+        if (!userAgent.includes("desktop")) {
+            messageElement.innerText = "Это приложение доступно только в Telegram Desktop!";
+            document.getElementById("game-container").style.display = "none";
+        } else {
+            messageElement.innerText = "Нажимайте на кнопку, чтобы получать очки!";
+            let score = 0;
+            const scoreElement = document.getElementById("score");
+            const tapButton = document.getElementById("tap-button");
 
-        // Функция для улучшений
-        function upgrade() {
-            alert("Dragon upgraded!");
-            // Здесь можно добавить логику для улучшений
+            tapButton.addEventListener("click", () => {
+                score++;
+                scoreElement.innerText = score;
+            });
         }
     </script>
 </body>
