@@ -50,11 +50,24 @@
 
     .info {
       margin-bottom: 20px;
+      width: 100%;
     }
 
     .info p {
       font-size: 20px;
       margin: 10px 0;
+    }
+
+    .energy-container {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .energy-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 5px;
     }
 
     .bar {
@@ -67,12 +80,12 @@
     }
 
     .energy-bar {
-      width: 100%;
       height: 100%;
       background-color: #4caf50;
       transition: width 0.5s ease-in-out;
     }
 
+    /* Кнопки и меню */
     .buttons {
       display: flex;
       flex-direction: column;
@@ -99,6 +112,37 @@
     .button:active {
       background-color: #d35400;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .menu {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu.active {
+      display: flex;
+    }
+
+    .toggle-button {
+      padding: 12px;
+      background-color: #2ecc71;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      width: 100%;
+    }
+
+    .toggle-button:hover {
+      background-color: #27ae60;
+    }
+
+    .toggle-button:active {
+      background-color: #1abc9c;
     }
 
     /* Адаптивность */
@@ -146,12 +190,21 @@
     <!-- Информация -->
     <div class="info">
       <p id="dragoCount">Drago: 0</p>
-      <p>Энергия: <span id="energy">100</span>%</p>
-      <div class="bar"><div class="energy-bar" id="energyBar"></div></div>
+      <!-- Энергия -->
+      <div class="energy-container">
+        <div class="energy-text">
+          <span>Энергия: <span id="energyPercentage">100%</span></span>
+          <span>+<span id="energyIncrease">2</span>%/сек</span>
+        </div>
+        <div class="bar"><div class="energy-bar" id="energyBar"></div></div>
+      </div>
     </div>
 
-    <!-- Кнопки -->
-    <div class="buttons">
+    <!-- Основная кнопка для открытия меню -->
+    <button class="toggle-button" onclick="toggleMenu()">Магазин улучшений</button>
+
+    <!-- Панель с кнопками улучшений -->
+    <div class="menu" id="menu">
       <button class="button" onclick="buyUpgrade()">Улучшение (+1 Drago за клик)</button>
       <button class="button" onclick="buyAutoClicker()">Купить автокликер (500 Drago)</button>
       <button class="button" onclick="buyEnergyUpgrade()">Увеличение энергии (200 Drago)</button>
@@ -174,9 +227,11 @@
     let autoClickerInterval;
 
     const energyBar = document.getElementById('energyBar');
-    const energyText = document.getElementById('energy');
+    const energyText = document.getElementById('energyPercentage');
+    const energyIncreaseText = document.getElementById('energyIncrease');
     const dragoCountText = document.getElementById('dragoCount');
     const dragonElement = document.getElementById('dragon');
+    const menu = document.getElementById('menu');
 
     function earnDrago() {
       if (energy >= energyDecreasePerClick) {
@@ -201,6 +256,10 @@
         if (energy > maxEnergy) energy = maxEnergy;
       }
       updateGame();
+    }
+
+    function toggleMenu() {
+      menu.classList.toggle('active');
     }
 
     function buyUpgrade() {
@@ -237,7 +296,7 @@
     function buyEnergyUpgrade() {
       if (dragoCount >= energyUpgradeCost) {
         dragoCount -= energyUpgradeCost;
-        maxEnergy += 50; // Увеличиваем максимальную энергию
+        maxEnergy += 50; 
         energyUpgradeCost *= 2;
         updateGame();
         alert('Максимальная энергия увеличена!');
@@ -249,7 +308,7 @@
     function buyEnergyRegeneration() {
       if (dragoCount >= regenerationUpgradeCost) {
         dragoCount -= regenerationUpgradeCost;
-        energyRegeneration += 1; // Ускоряем восстановление энергии
+        energyRegeneration += 1; 
         regenerationUpgradeCost *= 2;
         updateGame();
         alert('Восстановление энергии ускорено!');
