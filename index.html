@@ -10,7 +10,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
             margin: 0;
             background-color: #000;
@@ -19,24 +19,7 @@
             -webkit-user-select: none;
             -ms-user-select: none;
             overflow: hidden;
-            position: relative;
         }
-
-        .block-message {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 0, 0, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 1.5em;
-            text-align: center;
-            z-index: 100;
-            display: none;
-        }
-
         img {
             width: 50%;
             max-width: 300px;
@@ -47,12 +30,10 @@
             user-drag: none;
             -webkit-user-drag: none;
         }
-
         img:active {
             transform: scale(1.1);
             box-shadow: 0 0 30px 10px rgba(255, 165, 0, 0.8);
         }
-
         #counter {
             position: absolute;
             top: 10px;
@@ -73,12 +54,10 @@
             align-items: center;
             justify-content: center;
         }
-
         #counter:hover {
             background-color: rgba(255, 0, 0, 0.8);
             box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6);
         }
-
         #energy-bar {
             width: 50%;
             height: 20px;
@@ -91,7 +70,6 @@
             z-index: 10;
             overflow: hidden;
         }
-
         #energy-fill {
             height: 100%;
             width: 100%;
@@ -99,7 +77,6 @@
             border-radius: 10px;
             transition: width 0.3s;
         }
-
         .score-animation {
             position: absolute;
             font-size: 2rem;
@@ -118,7 +95,6 @@
             width: 100%;
             padding: 0 10px;
         }
-
         .button {
             background-color: #222;
             color: #fff;
@@ -131,20 +107,18 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
-
         .button:hover {
             background-color: #f77f00;
             color: #000;
             transform: scale(1.1);
         }
-
         .button:active {
             transform: scale(1.05);
         }
 
         .ranking-panel {
             position: fixed;
-            bottom: -100%;
+            bottom: -40%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
@@ -158,14 +132,13 @@
             width: 90%;
             max-height: 80%;
         }
-
         .ranking-panel.show {
             bottom: 10%;
         }
 
         .shop-panel {
             position: fixed;
-            bottom: -100%;
+            bottom: -40%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
@@ -179,7 +152,6 @@
             width: 90%;
             max-height: 80%;
         }
-
         .shop-panel.show {
             bottom: 10%;
         }
@@ -210,11 +182,9 @@
             0% {
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
             }
-
             50% {
                 box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.5);
             }
-
             100% {
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
             }
@@ -225,7 +195,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-
             100% {
                 opacity: 0;
                 transform: translateY(-50px);
@@ -236,6 +205,7 @@
             animation: glow 1.5s infinite;
         }
 
+        /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
             #counter {
                 font-size: 6vw;
@@ -243,10 +213,15 @@
                 right: 5%;
             }
 
-            img {
-                width: 70%; 
+            /* Центрирование картинки дракона */
+            #dragonImage {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 70%; /* Уменьшаем размер картинки на мобильных устройствах */
                 max-width: 250px;
-                margin-top: 10px;
+                margin-top: 0;
             }
 
             .button-container {
@@ -295,7 +270,7 @@
             }
 
             img {
-                width: 80%; 
+                width: 80%; /* Увеличена картинка дракона */
                 max-width: 200px;
                 margin-top: 10px;
             }
@@ -309,19 +284,14 @@
                 padding: 10px 0;
             }
         }
-
     </style>
 </head>
 <body>
-    <div class="block-message" id="blockMessage">
-        Упс! Кажется вы зашли с мобильного телефона или у вас не последняя версия Telegram Desktop! Наше приложение работает только на PC )))
-    </div>
-
     <div id="energy-bar">
         <div id="energy-fill" style="width: 100%;"></div>
     </div>
     <div id="counter">
-        <span id="dragoCount">0</span> <!-- Счетчик Драго -->
+        <span id="dragoCount">0</span> 
         <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;">
     </div>
     <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
@@ -345,21 +315,111 @@
             <button id="buyUpgradeButton">100 Драго</button>
         </div>
         <div class="shop-item">
-            <span>Ускорить восстановление энергии</span>
-            <button id="buySpeedUpgradeButton">200 Драго</button>
+            <span>Увеличить скорость восстановления энергии</span>
+            <button id="buyEnergySpeedButton">500 Драго</button>
         </div>
     </div>
 
     <script>
-        // Проверка устройства
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const isTelegramDesktop = /TelegramDesktop/i.test(navigator.userAgent);
+        let dragoCount = 0;
+        let energy = 100;
+        let energyRegenerationSpeed = 2;
+        let dragoPerClick = 1;
+        let upgradeCost = 100;
+        let energySpeedUpgradeCost = 500;
 
-        if (isMobile && !isTelegramDesktop) {
-            document.getElementById("blockMessage").style.display = "block";
+        const dragoCountSpan = document.getElementById("dragoCount");
+        const dragonImage = document.getElementById("dragonImage");
+        const rankingButton = document.getElementById("rankingButton");
+        const shopButton = document.getElementById("shopButton");
+        const rankingPanel = document.getElementById("rankingPanel");
+        const shopPanel = document.getElementById("shopPanel");
+        const buyUpgradeButton = document.getElementById("buyUpgradeButton");
+        const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
+
+        function updateEnergyBar() {
+            const energyFill = document.getElementById("energy-fill");
+            energyFill.style.width = `${(energy / 100) * 100}%`;
         }
 
-        // Функции для кнопок и анимации (оставьте вашу логику, если она была)
+        function addScoreAnimation(x, y, text) {
+            const animation = document.createElement("div");
+            animation.classList.add("score-animation");
+            animation.style.left = `${x}px`;
+            animation.style.top = `${y}px`;
+            animation.innerText = `+${text}`;
+            document.body.appendChild(animation);
+            setTimeout(() => {
+                animation.remove();
+            }, 1000);
+        }
+
+        function formatNumber(number) {
+            if (number >= 1000000) {
+                return (number / 1000000).toFixed(1) + "M";
+            } else if (number >= 1000) {
+                return (number / 1000).toFixed(1) + "K";
+            } else {
+                return number;
+            }
+        }
+
+        dragonImage.addEventListener("click", (event) => {
+            if (energy >= dragoPerClick) {
+                energy -= dragoPerClick;
+                dragoCount += dragoPerClick;
+                dragoCountSpan.innerText = formatNumber(dragoCount);
+                updateEnergyBar();
+                addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
+            }
+        });
+
+        buyUpgradeButton.addEventListener("click", () => {
+            if (dragoCount >= upgradeCost) {
+                dragoCount -= upgradeCost;
+                dragoPerClick++;
+                upgradeCost *= 2;
+                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
+                dragoCountSpan.innerText = formatNumber(dragoCount);
+            }
+        });
+
+        buyEnergySpeedButton.addEventListener("click", () => {
+            if (dragoCount >= energySpeedUpgradeCost) {
+                dragoCount -= energySpeedUpgradeCost;
+                energyRegenerationSpeed++;
+                energySpeedUpgradeCost *= 2;
+                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
+                dragoCountSpan.innerText = formatNumber(dragoCount);
+            }
+        });
+
+        rankingButton.addEventListener("click", () => {
+            rankingPanel.classList.toggle("show");
+        });
+
+        shopButton.addEventListener("click", () => {
+            shopPanel.classList.toggle("show");
+        });
+
+        document.body.addEventListener("click", (event) => {
+            if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
+                rankingPanel.classList.remove("show");
+            }
+            if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
+                shopPanel.classList.remove("show");
+            }
+        });
+
+        function regenerateEnergy() {
+            if (energy < 100) {
+                energy += energyRegenerationSpeed / 60;
+                if (energy > 100) energy = 100;
+                updateEnergyBar();
+            }
+        }
+
+        setInterval(regenerateEnergy, 1000 / 60); // Обновляем энергию каждую секунду
     </script>
 </body>
 </html>
