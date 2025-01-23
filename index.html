@@ -310,109 +310,75 @@
             <button id="buyUpgradeButton">100 Драго</button>
         </div>
         <div class="shop-item">
-            <span>Увеличить скорость восстановления энергии</span>
-            <button id="buyEnergySpeedButton">500 Драго</button>
+            <span>Ускорить восстановление энергии</span>
+            <button id="buySpeedUpgradeButton">200 Драго</button>
         </div>
     </div>
 
     <script>
         let dragoCount = 0;
         let energy = 100;
-        let energyRegenerationSpeed = 2;
-        let dragoPerClick = 1;
-        let upgradeCost = 100;
-        let energySpeedUpgradeCost = 500;
+        let energyConsumption = 1;
+        let energyRegenerationRate = 2;
+        let upgradeCostMultiplier = 1.5;
 
-        const dragoCountSpan = document.getElementById("dragoCount");
-        const dragonImage = document.getElementById("dragonImage");
-        const rankingButton = document.getElementById("rankingButton");
-        const shopButton = document.getElementById("shopButton");
-        const rankingPanel = document.getElementById("rankingPanel");
-        const shopPanel = document.getElementById("shopPanel");
-        const buyUpgradeButton = document.getElementById("buyUpgradeButton");
-        const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
+        const dragonImage = document.getElementById('dragonImage');
+        const dragoCountDisplay = document.getElementById('dragoCount');
+        const energyFill = document.getElementById('energy-fill');
+        const rankingPanel = document.getElementById('rankingPanel');
+        const shopPanel = document.getElementById('shopPanel');
+        const buyUpgradeButton = document.getElementById('buyUpgradeButton');
+        const buySpeedUpgradeButton = document.getElementById('buySpeedUpgradeButton');
 
         function updateEnergyBar() {
-            const energyFill = document.getElementById("energy-fill");
-            energyFill.style.width = `${(energy / 100) * 100}%`;
+            energyFill.style.width = `${energy}%`;
         }
 
-        function addScoreAnimation(x, y, text) {
-            const animation = document.createElement("div");
-            animation.classList.add("score-animation");
-            animation.style.left = `${x}px`;
-            animation.style.top = `${y}px`;
-            animation.innerText = `+${text}`;
-            document.body.appendChild(animation);
-            setTimeout(() => {
-                animation.remove();
-            }, 1000);
+        function earnDrago(amount) {
+            dragoCount += amount;
+            dragoCountDisplay.innerText = dragoCount;
         }
 
-        function formatNumber(number) {
-            if (number >= 1000000) {
-                return (number / 1000000).toFixed(1) + "M";
-            } else if (number >= 1000) {
-                return (number / 1000).toFixed(1) + "K";
-            } else {
-                return number;
-            }
-        }
-
-        dragonImage.addEventListener("click", (event) => {
-            if (energy >= dragoPerClick) {
-                energy -= dragoPerClick;
-                dragoCount += dragoPerClick;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
+        function handleDragonClick() {
+            if (energy >= energyConsumption) {
+                energy -= energyConsumption;
+                earnDrago(10);
                 updateEnergyBar();
-                addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
             }
-        });
+        }
 
-        buyUpgradeButton.addEventListener("click", () => {
-            if (dragoCount >= upgradeCost) {
-                dragoCount -= upgradeCost;
-                dragoPerClick++;
-                upgradeCost *= 2;
-                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        buyEnergySpeedButton.addEventListener("click", () => {
-            if (dragoCount >= energySpeedUpgradeCost) {
-                dragoCount -= energySpeedUpgradeCost;
-                energyRegenerationSpeed++;
-                energySpeedUpgradeCost *= 2;
-                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        rankingButton.addEventListener("click", () => {
-            rankingPanel.classList.toggle("show");
-        });
-
-        shopButton.addEventListener("click", () => {
-            shopPanel.classList.toggle("show");
-        });
-
-        document.body.addEventListener("click", (event) => {
-            if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
-                rankingPanel.classList.remove("show");
-            }
-
-            if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
-                shopPanel.classList.remove("show");
-            }
-        });
+        dragonImage.addEventListener('click', handleDragonClick);
 
         setInterval(() => {
             if (energy < 100) {
-                energy += energyRegenerationSpeed;
+                energy += energyRegenerationRate;
                 updateEnergyBar();
             }
         }, 1000);
+
+        document.getElementById('rankingButton').addEventListener('click', () => {
+            rankingPanel.classList.toggle('show');
+        });
+
+        document.getElementById('shopButton').addEventListener('click', () => {
+            shopPanel.classList.toggle('show');
+        });
+
+        buyUpgradeButton.addEventListener('click', () => {
+            if (dragoCount >= 100) {
+                energyConsumption++;
+                dragoCount -= 100;
+                dragoCountDisplay.innerText = dragoCount;
+            }
+        });
+
+        buySpeedUpgradeButton.addEventListener('click', () => {
+            if (dragoCount >= 200) {
+                energyRegenerationRate++;
+                dragoCount -= 200;
+                dragoCountDisplay.innerText = dragoCount;
+            }
+        });
     </script>
 </body>
 </html>
