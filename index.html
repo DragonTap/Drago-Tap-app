@@ -309,7 +309,6 @@
     </div>
 
     <script>
-        // Проверка User-Agent для разрешения только через Telegram Desktop
         const userAgent = navigator.userAgent.toLowerCase();
         const blockedMessage = document.getElementById('blockedMessage');
         if (userAgent.includes("mobile") || userAgent.includes("android") || !userAgent.includes("telegram")) {
