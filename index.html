@@ -10,7 +10,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             height: 100vh;
             margin: 0;
             background-color: #000;
@@ -20,28 +20,30 @@
             -ms-user-select: none;
             overflow: hidden;
         }
+
         img {
-            width: 50%;
+            width: 50vw;
             max-width: 300px;
             height: auto;
             cursor: pointer;
-            margin-top: 20px;
             transition: transform 0.1s ease-in-out, box-shadow 0.2s;
             user-drag: none;
             -webkit-user-drag: none;
         }
+
         img:active {
             transform: scale(1.1);
             box-shadow: 0 0 30px 10px rgba(255, 165, 0, 0.8);
         }
+
         #counter {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(255, 0, 0, 0.7);
+            top: 5vh;
+            right: 5vw;
+            background-color: rgba(255, 0, 0, 0.7); 
             padding: 10px 20px;
             border-radius: 20px;
-            font-size: 3vw;
+            font-size: 5vw;
             color: #fff;
             text-shadow: 0 0 10px #ff0000;
             box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5);
@@ -51,16 +53,18 @@
             max-width: 90%;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            align-items: center;
+            align-items: center; 
             justify-content: center;
         }
+
         #counter:hover {
-            background-color: rgba(255, 0, 0, 0.8);
-            box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6);
+            background-color: rgba(255, 0, 0, 0.8); 
+            box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6); 
         }
+
         #energy-bar {
-            width: 50%;
-            height: 20px;
+            width: 90vw;
+            height: 3vh;
             background-color: rgba(255, 255, 255, 0.2);
             border: 2px solid #f77f00;
             border-radius: 10px;
@@ -70,6 +74,7 @@
             z-index: 10;
             overflow: hidden;
         }
+
         #energy-fill {
             height: 100%;
             width: 100%;
@@ -77,9 +82,10 @@
             border-radius: 10px;
             transition: width 0.3s;
         }
+
         .score-animation {
             position: absolute;
-            font-size: 2rem;
+            font-size: 3vw;
             color: #ff0000;
             font-weight: bold;
             text-shadow: 0 0 10px #ff0000;
@@ -89,93 +95,55 @@
 
         .button-container {
             position: absolute;
-            bottom: 20px;
+            bottom: 5vh;
             display: flex;
             justify-content: space-around;
-            width: 100%;
+            width: 90%;
             padding: 0 10px;
         }
+
         .button {
             background-color: #222;
             color: #fff;
             border: 2px solid #f77f00;
             border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 1.2rem;
+            padding: 4vw 10px;
+            font-size: 4vw;
             text-align: center;
             text-shadow: 0 0 5px #f77f00;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
+
         .button:hover {
             background-color: #f77f00;
             color: #000;
             transform: scale(1.1);
         }
+
         .button:active {
             transform: scale(1.05);
         }
 
-        .ranking-panel {
+        .ranking-panel, .shop-panel {
             position: fixed;
-            bottom: 10%;
+            bottom: -100%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
-            padding: 20px;
+            padding: 5vw;
             box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5);
             border-radius: 20px 20px 0 0;
             transition: bottom 0.3s ease-in-out;
             z-index: 100;
             overflow-y: auto;
-            width: 90%;
+            width: 80vw;
             max-height: 80%;
         }
-        .ranking-panel.show {
-            bottom: 10%;
-        }
 
-        .shop-panel {
-            position: fixed;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            padding: 20px;
-            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5);
-            border-radius: 20px 20px 0 0;
-            transition: bottom 0.3s ease-in-out;
-            z-index: 100;
-            overflow-y: auto;
-            width: 90%;
-            max-height: 80%;
-        }
-        .shop-panel.show {
-            bottom: 10%;
-        }
-
-        .shop-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .shop-item button {
-            background-color: #f77f00;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .shop-item button:hover {
-            background-color: #ff8c00;
+        .ranking-panel.show, .shop-panel.show {
+            bottom: 0;
         }
 
         @keyframes glow {
@@ -197,7 +165,7 @@
             }
             100% {
                 opacity: 0;
-                transform: translateY(-50px);
+                transform: translateY(-5vh);
             }
         }
 
@@ -205,83 +173,52 @@
             animation: glow 1.5s infinite;
         }
 
-        /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
-            #counter {
-                font-size: 6vw;
-                top: 5%;
-                right: 5%;
+            img {
+                width: 70vw; 
+                max-width: 250px;
             }
 
-            /* Центрирование картинки дракона */
-            #dragonImage {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 70%; /* Уменьшаем размер картинки на мобильных устройствах */
-                max-width: 250px;
-                margin-top: 0;
+            #counter {
+                font-size: 8vw;
             }
 
             .button-container {
-                position: relative;
-                bottom: 10%;
+                bottom: 10vh;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                width: 100%;
+                width: 80%;
             }
 
             .button {
-                font-size: 1rem;
-                padding: 8px 16px;
-                margin-bottom: 10px;
+                font-size: 5vw;
+                padding: 5vw;
             }
 
             .ranking-panel, .shop-panel {
-                width: 100%;
-                padding: 15px;
-                border-radius: 15px 15px 0 0;
-            }
-
-            .ranking-panel.show, .shop-panel.show {
-                bottom: 0;
-            }
-
-            .shop-item {
-                flex-direction: column;
-                align-items: flex-start;
-                font-size: 1rem;
-            }
-
-            .shop-item button {
-                width: 100%;
-                padding: 12px 0;
-                margin-top: 10px;
+                width: 90vw;
+                padding: 8vw;
             }
         }
 
         @media (max-width: 480px) {
-            #counter {
-                font-size: 8vw;
-                top: 5%;
-                right: 5%;
+            img {
+                width: 80vw;
+                max-width: 200px;
             }
 
-            img {
-                width: 80%; /* Увеличена картинка дракона */
-                max-width: 200px;
-                margin-top: 10px;
+            #counter {
+                font-size: 10vw;
             }
 
             .button {
-                font-size: 0.9rem;
-                padding: 8px 14px;
+                font-size: 6vw;
+                padding: 6vw;
             }
 
-            .shop-item button {
-                padding: 10px 0;
+            .ranking-panel, .shop-panel {
+                padding: 10vw;
             }
         }
     </style>
@@ -291,8 +228,8 @@
         <div id="energy-fill" style="width: 100%;"></div>
     </div>
     <div id="counter">
-        <span id="dragoCount">0</span> 
-        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;">
+        <span id="dragoCount">0</span>
+        <img src="drago_icon.png" alt="Drago Icon" style="width: 30px; margin-left: 10px;">
     </div>
     <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
 
@@ -406,6 +343,7 @@
             if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
                 rankingPanel.classList.remove("show");
             }
+
             if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
                 shopPanel.classList.remove("show");
             }
