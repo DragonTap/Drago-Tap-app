@@ -1,4 +1,83 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drago Tap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .game-container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .dragon-image {
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .dragon-image:active {
+            transform: scale(0.9);
+        }
+        .score {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="game-container">
+        <h1>Drago Tap</h1>
+        <img src="dragon.png" alt="Dragon" class="dragon-image" onclick="tapDragon()">
+        <div class="score">Score: <span id="score">0</span></div>
+        <button class="btn" onclick="upgrade()">Upgrade Dragon</button>
+    </div>
+
+    <script>
+        // Проверка, что приложение открыто в Telegram Desktop
+        if (navigator.userAgent.indexOf("Telegram Desktop") === -1) {
+            document.getElementById('game-container').innerHTML = "<h1>Извините, эта игра доступна только в Telegram Desktop!</h1>";
+        } else {
+            let score = 0;
+
+            // Функция клика по дракону
+            function tapDragon() {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+
+            // Функция для улучшений
+            function upgrade() {
+                alert("Dragon upgraded!");
+                // Здесь можно добавить логику для улучшений, например, увеличение количества очков за клик
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
