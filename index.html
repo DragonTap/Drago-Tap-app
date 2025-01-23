@@ -243,8 +243,14 @@
     </div>
 
     <script>
-        // Проверка устройства с помощью JavaScript
-        if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // Функция для определения устройства
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent;
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+        }
+
+        // Проверка на мобильное устройство
+        if (isMobileDevice()) {
             document.querySelector(".mobile-warning").style.display = "block"; // Показываем сообщение для мобильных
             document.querySelector(".content").style.display = "none"; // Скрываем основной контент
         }
