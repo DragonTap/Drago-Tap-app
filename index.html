@@ -25,7 +25,7 @@
             max-width: 300px;
             height: auto;
             cursor: pointer;
-            margin-top: 50px;
+            margin-top: 20px;
             transition: transform 0.1s ease-in-out, box-shadow 0.2s;
             user-drag: none;
             -webkit-user-drag: none;
@@ -370,23 +370,22 @@
         });
 
         buyUpgradeButton.addEventListener("click", () => {
-    if (dragoCount >= upgradeCost) {
-        dragoCount -= upgradeCost;
-        dragoPerClick++;
-        upgradeCost *= 2;
-        buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
-        dragoCountSpan.innerText = formatNumber(dragoCount);
-        shopPanel.classList.remove("show"); // Закрыть панель магазина
+            if (dragoCount >= upgradeCost) {
+                dragoCount -= upgradeCost;
+                dragoPerClick++;
+                upgradeCost *= 2;
+                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
+                dragoCountSpan.innerText = formatNumber(dragoCount);
             }
         });
-    buyEnergySpeedButton.addEventListener("click", () => {
-    if (dragoCount >= energySpeedUpgradeCost) {
-        dragoCount -= energySpeedUpgradeCost;
-        energyRegenerationSpeed++;
-        energySpeedUpgradeCost *= 2;
-        buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
-        dragoCountSpan.innerText = formatNumber(dragoCount);
-        shopPanel.classList.remove("show"); // Закрыть панель магазина
+
+        buyEnergySpeedButton.addEventListener("click", () => {
+            if (dragoCount >= energySpeedUpgradeCost) {
+                dragoCount -= energySpeedUpgradeCost;
+                energyRegenerationSpeed++;
+                energySpeedUpgradeCost *= 2;
+                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
+                dragoCountSpan.innerText = formatNumber(dragoCount);
             }
         });
 
