@@ -41,24 +41,29 @@
     </div>
 
     <script>
-        // Простейший метод для проверки, что приложение открыто в Telegram Desktop
-        const messageElement = document.getElementById("message");
+        // Подключение к Telegram WebApp API
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            // Проверка, если это Telegram Desktop
+            if (Telegram.WebApp.isDesktop) {
+                // Если это Telegram Desktop, показываем интерфейс игры
+                document.getElementById("message").innerText = "Нажимайте на кнопку, чтобы получать очки!";
+                
+                let score = 0;
+                const scoreElement = document.getElementById("score");
+                const tapButton = document.getElementById("tap-button");
 
-        // Убедимся, что это Telegram WebApp, открытое в Telegram Desktop
-        if (window.Telegram && window.Telegram.WebApp) {
-            messageElement.innerText = "Нажимайте на кнопку, чтобы получать очки!";
-            
-            let score = 0;
-            const scoreElement = document.getElementById("score");
-            const tapButton = document.getElementById("tap-button");
-
-            tapButton.addEventListener("click", () => {
-                score++;
-                scoreElement.innerText = score;
-            });
+                tapButton.addEventListener("click", () => {
+                    score++;
+                    scoreElement.innerText = score;
+                });
+            } else {
+                // Если не Telegram Desktop
+                document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
+                document.getElementById("game-container").style.display = "none";
+            }
         } else {
-            // Если это не Telegram WebApp (например, мобильная версия)
-            messageElement.innerText = "Это приложение доступно только в Telegram Desktop!";
+            // Если не Telegram WebApp
+            document.getElementById("message").innerText = "Ошибка: приложение должно быть открыто в Telegram WebApp!";
             document.getElementById("game-container").style.display = "none";
         }
     </script>
