@@ -335,7 +335,7 @@
 
         // Проверка платформы
         if (navigator.platform !== 'Win32' && navigator.platform !== 'MacIntel' && navigator.platform !== 'Linux x86_64') {
-            document.body.innerHTML = "<h1>Игра доступна только в Telegram Desktop.</h1>";
+            document.body.innerHTML = "<h1>Упсс! А игра доступна только в Telegram Desktop! Или у вас установлена не последняя версия Telegram Desktop!</h1>";
             throw new Error("Unsupported platform");
         }
 
