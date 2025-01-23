@@ -1,100 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drago Tap</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        #game-container {
-            margin-top: 50px;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 32px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        #message {
-            font-size: 18px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drago Tap</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .dragon {
+      width: 200px;
+      height: 200px;
+      background-image: url('dragon.png');
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+    .dragon:hover {
+      transform: scale(1.1);
+    }
+    .info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .bar {
+      width: 80%;
+      height: 20px;
+      background-color: #ccc;
+      margin-top: 10px;
+    }
+    .energy-bar {
+      height: 100%;
+      background-color: green;
+      width: 100%;
+      transition: width 0.5s ease-in-out;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 600px) {
+      .dragon {
+        width: 150px;
+        height: 150px;
+      }
+      .info {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Добро пожаловать в Drago Tap!</h1>
-    <p id="message"></p>
-    <div id="game-container" style="display: none;">
-        <button class="button" id="tap-button">Тапать!</button>
-        <p>Очки: <span id="score">0</span></p>
+  <div class="game-container">
+    <div class="dragon" id="dragon" onclick="earnDrago()"></div>
+    <div class="info">
+      <p id="dragoCount">Drago: 0</p>
+      <p>Энергия: <span id="energy">100</span>%</p>
+      <div class="bar"><div class="energy-bar" id="energyBar"></div></div>
     </div>
+    <div class="buttons">
+      <button class="button" onclick="buyUpgrade()">Улучшение (+1 Drago за клик)</button>
+    </div>
+  </div>
 
-    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
-    
-    <script>
-        // Проверка через userAgent на Telegram Desktop
-        const userAgent = navigator.userAgent.toLowerCase();
+  <script>
+    let dragoCount = 0;
+    let energy = 100;
+    let energyRegeneration = 2; // скорость восстановления энергии
+    let energyDecreasePerClick = 10; // количество энергии, которое тратится за клик
+    let dragoPerClick = 1; // сколько Drago дается за клик
+    let upgradeCost = 10; // начальная стоимость улучшения
 
-        // Если это мобильная версия Telegram или Web, блокируем доступ
-        if (userAgent.indexOf('telegram') !== -1 && (userAgent.indexOf('android') !== -1 || userAgent.indexOf('iphone') !== -1)) {
-            document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
-        } else if (window.Telegram && window.Telegram.WebApp) {
-            // Если это Telegram Desktop
-            const userID = Telegram.WebApp.initDataUnsafe.user.id;
+    const energyBar = document.getElementById('energyBar');
+    const energyText = document.getElementById('energy');
+    const dragoCountText = document.getElementById('dragoCount');
 
-            // Инициализация игры и персонализация
-            document.getElementById("message").innerText = `Добро пожаловать, игрок ${userID}! Нажимайте на кнопку, чтобы получать очки!`;
-            document.getElementById("game-container").style.display = 'block';
+    function earnDrago() {
+      if (energy >= energyDecreasePerClick) {
+        dragoCount += dragoPerClick;
+        energy -= energyDecreasePerClick;
+        updateGame();
+      } else {
+        alert('Недостаточно энергии!');
+      }
+    }
 
-            let score = 0;
-            const scoreElement = document.getElementById("score");
-            const tapButton = document.getElementById("tap-button");
+    function updateGame() {
+      dragoCountText.textContent = `Drago: ${dragoCount}`;
+      energyText.textContent = `${energy}%`;
+      energyBar.style.width = `${energy}%`;
+      regenerateEnergy();
+    }
 
-            // Шифрование очков с использованием AES
-            tapButton.addEventListener("click", () => {
-                score++;
-                const encryptedScore = CryptoJS.AES.encrypt(score.toString(), 'secret_key').toString();
-                scoreElement.innerText = score;
+    function regenerateEnergy() {
+      if (energy < 100) {
+        energy += energyRegeneration;
+        if (energy > 100) energy = 100;
+      }
+      updateGame();
+    }
 
-                // Отправка зашифрованных данных на сервер (например)
-                console.log('Encrypted Score:', encryptedScore);
-                // Здесь можно отправить зашифрованные данные на сервер для сохранения
-            });
+    function buyUpgrade() {
+      if (dragoCount >= upgradeCost) {
+        dragoCount -= upgradeCost;
+        dragoPerClick += 1;
+        upgradeCost *= 2; // удваиваем стоимость улучшения
+        updateGame();
+        alert('Улучшение куплено!');
+      } else {
+        alert('Недостаточно Drago для покупки улучшения.');
+      }
+    }
 
-            // Пример логирования
-            console.log(`UserID: ${userID}, Score: ${score}`);
-        } else {
-            // Если это не Telegram WebApp (например, мобильная версия или браузер)
-            document.getElementById("message").innerText = "Ошибка: приложение должно быть открыто в Telegram WebApp!";
-        }
-
-        // Пример защиты от XSS
-        function sanitizeInput(input) {
-            let element = document.createElement('div');
-            element.innerText = input;
-            return element.innerHTML; // Экранируем возможные вредоносные символы
-        }
-
-        // Пример защиты от CSRF: Генерация CSRF токена
-        function generateCsrfToken() {
-            return Math.random().toString(36).substr(2);
-        }
-
-        // Генерация CSRF токена
-        const csrfToken = generateCsrfToken();
-        console.log('Generated CSRF Token:', csrfToken);
-    </script>
+    setInterval(regenerateEnergy, 1000); // восстанавливаем энергию каждую секунду
+  </script>
 </body>
 </html>
