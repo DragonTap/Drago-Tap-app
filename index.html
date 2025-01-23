@@ -350,7 +350,7 @@
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const isTelegramDesktop = /TelegramDesktop/i.test(navigator.userAgent);
 
-        if (isMobile && !isTelegramDesktop) {
+        if (isMobile || !isTelegramDesktop) {
             document.getElementById("blockMessage").style.display = "block";
             document.body.style.display = "none";
         } else {
