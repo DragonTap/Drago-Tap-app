@@ -309,10 +309,10 @@
     </div>
 
     <script>
-        // Проверка User-Agent для запрета на мобильные устройства
+        // Проверка User-Agent для разрешения только через Telegram Desktop
         const userAgent = navigator.userAgent.toLowerCase();
         const blockedMessage = document.getElementById('blockedMessage');
-        if (!userAgent.includes("desktop") || userAgent.includes("mobile") || userAgent.includes("android")) {
+        if (userAgent.includes("mobile") || userAgent.includes("android") || !userAgent.includes("telegram")) {
             document.body.style.display = 'none'; // скрываем контент
             blockedMessage.style.display = 'block'; // показываем сообщение
         }
