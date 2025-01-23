@@ -14,7 +14,6 @@
         }
         #game-container {
             margin-top: 50px;
-            position: relative;
         }
         .button {
             background-color: #4CAF50;
@@ -31,94 +30,74 @@
             font-size: 18px;
             margin-top: 20px;
         }
-        #score-board {
-            font-size: 24px;
-            margin-top: 20px;
-        }
-        #dragon {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            transition: transform 0.1s ease-in-out;
-        }
-        #dragon:active {
-            transform: translate(-50%, -50%) scale(0.9);
-        }
-        .animation {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 0.3s ease-in-out;
-        }
-        @keyframes bounce {
-            0% { transform: translateY(-10px); }
-            50% { transform: translateY(10px); }
-            100% { transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
     <h1>Добро пожаловать в Drago Tap!</h1>
-    <p id="message">Нажимай на дракона, чтобы получать очки!</p>
-    <div id="score-board">Очки: <span id="score">0</span></div>
-    <div id="game-container">
-        <img id="dragon" src="https://via.placeholder.com/150?text=Dragon" alt="Dragon">
+    <p id="message"></p>
+    <div id="game-container" style="display: none;">
+        <button class="button" id="tap-button">Тапать!</button>
+        <p>Очки: <span id="score">0</span></p>
     </div>
-    <button class="button" id="upgrade-button">Купить улучшение (Цена: 10)</button>
 
+    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
+    
     <script>
-        let score = 0;
-        let pointsPerClick = 1;
-        let upgradeCost = 10;
-        const scoreElement = document.getElementById('score');
-        const dragonElement = document.getElementById('dragon');
-        const upgradeButton = document.getElementById('upgrade-button');
+        // Проверка через userAgent на мобильную версию
+        const userAgent = navigator.userAgent.toLowerCase();
 
-        // Обработчик нажатия на дракона
-        dragonElement.addEventListener('click', () => {
-            // Добавляем очки при клике
-            score += pointsPerClick;
-            scoreElement.innerText = score;
+        // Если это мобильная версия Telegram, блокируем доступ
+        if (userAgent.indexOf('telegram') !== -1 && (userAgent.indexOf('android') !== -1 || userAgent.indexOf('iphone') !== -1)) {
+            document.getElementById("message").innerText = "Это приложение доступно только в Telegram Desktop!";
+        } else {
+            // Если это Telegram Desktop или другое устройство
+            // Проверка через Telegram WebApp API
+            if (window.Telegram && window.Telegram.WebApp) {
+                const userID = Telegram.WebApp.initDataUnsafe.user.id;
 
-            // Создаем анимацию
-            createAnimation();
+                // Инициализация игры и персонализация
+                document.getElementById("message").innerText = `Добро пожаловать, игрок ${userID}! Нажимайте на кнопку, чтобы получать очки!`;
+                document.getElementById("game-container").style.display = 'block';
 
-            // Проверяем, можно ли купить улучшение
-            if (score >= upgradeCost) {
-                upgradeButton.disabled = false;
+                let score = 0;
+                const scoreElement = document.getElementById("score");
+                const tapButton = document.getElementById("tap-button");
+
+                // Шифрование очков с использованием AES
+                tapButton.addEventListener("click", () => {
+                    score++;
+                    const encryptedScore = CryptoJS.AES.encrypt(score.toString(), 'secret_key').toString();
+                    scoreElement.innerText = score;
+
+                    // Отправка зашифрованных данных на сервер (например)
+                    console.log('Encrypted Score:', encryptedScore);
+                    // Здесь можно отправить зашифрованные данные на сервер для сохранения
+                });
+
+                // Пример логирования
+                console.log(`UserID: ${userID}, Score: ${score}`);
+            } else {
+                // Если это не Telegram WebApp
+                document.getElementById("message").innerText = "Ошибка: приложение должно быть открыто в Telegram WebApp!";
             }
-        });
-
-        // Создание анимации
-        function createAnimation() {
-            const animationElement = document.createElement('div');
-            animationElement.classList.add('animation');
-            animationElement.innerText = `+${pointsPerClick}`;
-            document.body.appendChild(animationElement);
-
-            // Удаляем анимацию после завершения
-            setTimeout(() => {
-                animationElement.remove();
-            }, 300);
         }
 
-        // Обработчик улучшения
-        upgradeButton.addEventListener('click', () => {
-            if (score >= upgradeCost) {
-                // Покупаем улучшение
-                score -= upgradeCost;
-                pointsPerClick++;
-                upgradeCost = Math.floor(upgradeCost * 1.5); // Увеличиваем стоимость следующего улучшения
+        // Пример защиты от XSS
+        function sanitizeInput(input) {
+            let element = document.createElement('div');
+            element.innerText = input;
+            return element.innerHTML; // Экранируем возможные вредоносные символы
+        }
 
-                // Обновляем интерфейс
-                scoreElement.innerText = score;
-                upgradeButton.innerText = `Купить улучшение (Цена: ${upgradeCost})`;
-                upgradeButton.disabled = true;
-            }
-        });
+        // Пример защиты от CSRF: Генерация CSRF токена (можно дополнительно интегрировать на сервере)
+        function generateCsrfToken() {
+            return Math.random().toString(36).substr(2);
+        }
+
+        // Важно: Ты должен отправлять CSRF токены с запросами на сервер и проверять их.
+        const csrfToken = generateCsrfToken();
+        console.log('Generated CSRF Token:', csrfToken);
     </script>
 </body>
 </html>
