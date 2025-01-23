@@ -35,7 +35,6 @@
             z-index: 100;
         }
 
-        /* Ваши остальные стили, которые вы использовали до этого */
         img {
             width: 50%;
             max-width: 300px;
@@ -232,7 +231,6 @@
             animation: glow 1.5s infinite;
         }
 
-        /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
             #counter {
                 font-size: 6vw;
@@ -353,10 +351,6 @@
         const isTelegramDesktop = /TelegramDesktop/i.test(navigator.userAgent);
 
         if (isMobile && !isTelegramDesktop) {
-            document.getElementById("blockMessage").style.display = "block";
-            document.body.style.display = "none";
-        } else if (!isTelegramDesktop) {
-            document.getElementById("blockMessage").innerHTML = "Пожалуйста, используйте Telegram Desktop.";
             document.getElementById("blockMessage").style.display = "block";
             document.body.style.display = "none";
         } else {
