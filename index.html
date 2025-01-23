@@ -1,4 +1,4 @@
-
+Вы сказали:
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -87,6 +87,7 @@
             animation: float-up 1s ease-out;
             pointer-events: none;
         }
+
         .button-container {
             position: absolute;
             bottom: 20px;
@@ -115,6 +116,7 @@
         .button:active {
             transform: scale(1.05);
         }
+
         .ranking-panel {
             position: fixed;
             bottom: -100%;
@@ -134,6 +136,7 @@
         .ranking-panel.show {
             bottom: 10%;
         }
+
         .shop-panel {
             position: fixed;
             bottom: -100%;
@@ -153,6 +156,7 @@
         .shop-panel.show {
             bottom: 10%;
         }
+
         .shop-item {
             display: flex;
             justify-content: space-between;
@@ -160,6 +164,7 @@
             margin-bottom: 10px;
             font-size: 1.2rem;
         }
+
         .shop-item button {
             background-color: #f77f00;
             color: #000;
@@ -169,9 +174,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .shop-item button:hover {
             background-color: #ff8c00;
         }
+
         @keyframes glow {
             0% {
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
@@ -183,6 +190,7 @@
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
             }
         }
+
         @keyframes float-up {
             0% {
                 opacity: 1;
@@ -193,9 +201,11 @@
                 transform: translateY(-50px);
             }
         }
+
         img:hover {
             animation: glow 1.5s infinite;
         }
+
         /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
             #counter {
@@ -203,11 +213,13 @@
                 top: 5%;
                 right: 5%;
             }
+
             img {
                 width: 70%; /* Увеличена картинка дракона */
                 max-width: 250px;
                 margin-top: 10px;
             }
+
             .button-container {
                 position: relative;
                 bottom: 10%;
@@ -216,45 +228,54 @@
                 justify-content: center;
                 width: 100%;
             }
+
             .button {
                 font-size: 1rem;
                 padding: 8px 16px;
                 margin-bottom: 10px;
             }
+
             .ranking-panel, .shop-panel {
                 width: 100%;
                 padding: 15px;
                 border-radius: 15px 15px 0 0;
             }
+
             .ranking-panel.show, .shop-panel.show {
                 bottom: 0;
             }
+
             .shop-item {
                 flex-direction: column;
                 align-items: flex-start;
                 font-size: 1rem;
             }
+
             .shop-item button {
                 width: 100%;
                 padding: 12px 0;
                 margin-top: 10px;
             }
         }
+
         @media (max-width: 480px) {
             #counter {
                 font-size: 8vw;
                 top: 5%;
                 right: 5%;
             }
+
             img {
                 width: 80%; /* Увеличена картинка дракона */
                 max-width: 200px;
                 margin-top: 10px;
             }
+
             .button {
                 font-size: 0.9rem;
                 padding: 8px 14px;
             }
+
             .shop-item button {
                 padding: 10px 0;
             }
@@ -269,17 +290,20 @@
         <span id="dragoCount">0</span> <!-- Счётчик очков -->
         <img id="dragoIcon" src="drago_icon.png" alt="Drago Icon">
     </div>
+
     <img id="dragonImage" src="dragon.png" alt="Dragon">
-   
+    
     <div class="button-container">
         <div class="button" id="rankingButton">Рейтинг</div>
         <div class="button" id="shopButton">Магазин</div>
     </div>
+
     <!-- Панель рейтинга -->
     <div id="rankingPanel" class="ranking-panel">
         <h2>Рейтинг</h2>
         <!-- Содержание панели рейтинга -->
     </div>
+
     <!-- Панель магазина -->
     <div id="shopPanel" class="shop-panel">
         <h2>Магазин</h2>
@@ -292,38 +316,15 @@
             <button id="buyEnergySpeedButton">500 Драго</button>
         </div>
     </div>
+
     <script>
-        // Проверка платформы
-        if (navigator.platform !== 'Win32' && navigator.platform !== 'MacIntel' && navigator.platform !== 'Linux x86_64') {
-            // Создаем предупреждение на странице
-            const warningMessage = document.createElement('div');
-            warningMessage.style.position = 'fixed';
-            warningMessage.style.top = '50%';
-            warningMessage.style.left = '50%';
-            warningMessage.style.transform = 'translate(-50%, -50%)';
-            warningMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-            warningMessage.style.color = '#fff';
-            warningMessage.style.padding = '20px';
-            warningMessage.style.fontSize = '1.5rem';
-            warningMessage.style.borderRadius = '10px';
-            warningMessage.style.textAlign = 'center';
-            warningMessage.style.boxShadow = '0 0 15px rgba(255, 0, 0, 0.8)';
-            warningMessage.innerHTML = `<h1>Упсс! Игра доступна только в Telegram Desktop!</h1><p>Или у вас установлена не последняя версия Telegram Desktop!</p>`;
-           
-            // Добавляем предупреждение на страницу
-            document.body.appendChild(warningMessage);
-   
-            // Останавливаем дальнейшее выполнение игры
-            return;
-        }
-   
         let energy = 100;
         let energyRegenerationSpeed = 2;
         let dragoCount = 0;
         let dragoPerClick = 1;
         let upgradeCost = 100;
         let energySpeedUpgradeCost = 500;
-   
+
         const dragoCountSpan = document.getElementById("dragoCount");
         const dragonImage = document.getElementById("dragonImage");
         const rankingButton = document.getElementById("rankingButton");
@@ -332,24 +333,30 @@
         const shopPanel = document.getElementById("shopPanel");
         const buyUpgradeButton = document.getElementById("buyUpgradeButton");
         const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
-   
+
+        // Проверка платформы
+        if (navigator.platform !== 'Win32' && navigator.platform !== 'MacIntel' && navigator.platform !== 'Linux x86_64') {
+            document.body.innerHTML = "<h1>Упсс! А игра доступна только в Telegram Desktop! Или у вас установлена не последняя версия Telegram Desktop!</h1>";
+            throw new Error("Unsupported platform");
+        }
+
         function updateEnergyBar() {
             const energyFill = document.getElementById("energy-fill");
-            energyFill.style.width = `${(energy / 100) * 100}%`;
+            energyFill.style.width = ${(energy / 100) * 100}%;
         }
-   
+
         function addScoreAnimation(x, y, text) {
             const animation = document.createElement("div");
             animation.classList.add("score-animation");
-            animation.style.left = `${x}px`;
-            animation.style.top = `${y}px`;
-            animation.innerText = `+${text}`;
+            animation.style.left = ${x}px;
+            animation.style.top = ${y}px;
+            animation.innerText = +${text};
             document.body.appendChild(animation);
             setTimeout(() => {
                 animation.remove();
             }, 1000);
         }
-   
+
         function formatNumber(number) {
             if (number >= 1000000) {
                 return (number / 1000000).toFixed(1) + "M";
@@ -359,7 +366,7 @@
                 return number;
             }
         }
-   
+
         dragonImage.addEventListener("click", (event) => {
             if (energy >= dragoPerClick) {
                 energy -= dragoPerClick;
@@ -369,51 +376,51 @@
                 addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
             }
         });
-   
+
         buyUpgradeButton.addEventListener("click", () => {
             if (dragoCount >= upgradeCost) {
                 dragoCount -= upgradeCost;
                 dragoPerClick++;
                 upgradeCost *= 2;
-                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
+                buyUpgradeButton.innerText = ${formatNumber(upgradeCost)} Драго;
                 dragoCountSpan.innerText = formatNumber(dragoCount);
             }
         });
-   
+
         buyEnergySpeedButton.addEventListener("click", () => {
             if (dragoCount >= energySpeedUpgradeCost) {
                 dragoCount -= energySpeedUpgradeCost;
                 energyRegenerationSpeed++;
                 energySpeedUpgradeCost *= 2;
-                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
+                buyEnergySpeedButton.innerText = ${formatNumber(energySpeedUpgradeCost)} Драго;
                 dragoCountSpan.innerText = formatNumber(dragoCount);
             }
         });
-   
+
         rankingButton.addEventListener("click", () => {
             rankingPanel.classList.toggle("show");
         });
-   
+
         shopButton.addEventListener("click", () => {
             shopPanel.classList.toggle("show");
         });
-   
+
         document.body.addEventListener("click", (event) => {
             if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
                 rankingPanel.classList.remove("show");
             }
-   
+
             if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
                 shopPanel.classList.remove("show");
             }
         });
-   
+
         setInterval(() => {
             if (energy < 100) {
                 energy += energyRegenerationSpeed;
                 updateEnergyBar();
             }
         }, 1000);
-    </script>    
+    </script>
 </body>
 </html>
