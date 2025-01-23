@@ -317,109 +317,127 @@
     </div>
 
     <script>
-        let energy = 100;
-        let energyRegenerationSpeed = 2;
-        let dragoCount = 0;
-        let dragoPerClick = 1;
-        let upgradeCost = 100;
-        let energySpeedUpgradeCost = 500;
+    // Проверка платформы
+    if (navigator.platform !== 'Win32' && navigator.platform !== 'MacIntel' && navigator.platform !== 'Linux x86_64') {
+        // Создаем предупреждение на странице
+        const warningMessage = document.createElement('div');
+        warningMessage.style.position = 'fixed';
+        warningMessage.style.top = '50%';
+        warningMessage.style.left = '50%';
+        warningMessage.style.transform = 'translate(-50%, -50%)';
+        warningMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+        warningMessage.style.color = '#fff';
+        warningMessage.style.padding = '20px';
+        warningMessage.style.fontSize = '1.5rem';
+        warningMessage.style.borderRadius = '10px';
+        warningMessage.style.textAlign = 'center';
+        warningMessage.style.boxShadow = '0 0 15px rgba(255, 0, 0, 0.8)';
+        warningMessage.innerHTML = `<h1>Упсс! Игра доступна только в Telegram Desktop!</h1><p>Или у вас установлена не последняя версия Telegram Desktop!</p>`;
+        
+        // Добавляем предупреждение на страницу
+        document.body.appendChild(warningMessage);
 
-        const dragoCountSpan = document.getElementById("dragoCount");
-        const dragonImage = document.getElementById("dragonImage");
-        const rankingButton = document.getElementById("rankingButton");
-        const shopButton = document.getElementById("shopButton");
-        const rankingPanel = document.getElementById("rankingPanel");
-        const shopPanel = document.getElementById("shopPanel");
-        const buyUpgradeButton = document.getElementById("buyUpgradeButton");
-        const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
+        // Останавливаем дальнейшее выполнение игры
+        return;
+    }
 
-        // Проверка платформы
-        if (navigator.platform !== 'Win32' && navigator.platform !== 'MacIntel' && navigator.platform !== 'Linux x86_64') {
-            document.body.innerHTML = "<h1>Упсс! А игра доступна только в Telegram Desktop! Или у вас установлена не последняя версия Telegram Desktop!</h1>";
-            throw new Error("Unsupported platform");
-        }
+    let energy = 100;
+    let energyRegenerationSpeed = 2;
+    let dragoCount = 0;
+    let dragoPerClick = 1;
+    let upgradeCost = 100;
+    let energySpeedUpgradeCost = 500;
 
-        function updateEnergyBar() {
-            const energyFill = document.getElementById("energy-fill");
-            energyFill.style.width = `${(energy / 100) * 100}%`;
-        }
+    const dragoCountSpan = document.getElementById("dragoCount");
+    const dragonImage = document.getElementById("dragonImage");
+    const rankingButton = document.getElementById("rankingButton");
+    const shopButton = document.getElementById("shopButton");
+    const rankingPanel = document.getElementById("rankingPanel");
+    const shopPanel = document.getElementById("shopPanel");
+    const buyUpgradeButton = document.getElementById("buyUpgradeButton");
+    const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
 
-        function addScoreAnimation(x, y, text) {
-            const animation = document.createElement("div");
-            animation.classList.add("score-animation");
-            animation.style.left = `${x}px`;
-            animation.style.top = `${y}px`;
-            animation.innerText = `+${text}`;
-            document.body.appendChild(animation);
-            setTimeout(() => {
-                animation.remove();
-            }, 1000);
-        }
+    function updateEnergyBar() {
+        const energyFill = document.getElementById("energy-fill");
+        energyFill.style.width = `${(energy / 100) * 100}%`;
+    }
 
-        function formatNumber(number) {
-            if (number >= 1000000) {
-                return (number / 1000000).toFixed(1) + "M";
-            } else if (number >= 1000) {
-                return (number / 1000).toFixed(1) + "K";
-            } else {
-                return number;
-            }
-        }
-
-        dragonImage.addEventListener("click", (event) => {
-            if (energy >= dragoPerClick) {
-                energy -= dragoPerClick;
-                dragoCount += dragoPerClick;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-                updateEnergyBar();
-                addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
-            }
-        });
-
-        buyUpgradeButton.addEventListener("click", () => {
-            if (dragoCount >= upgradeCost) {
-                dragoCount -= upgradeCost;
-                dragoPerClick++;
-                upgradeCost *= 2;
-                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        buyEnergySpeedButton.addEventListener("click", () => {
-            if (dragoCount >= energySpeedUpgradeCost) {
-                dragoCount -= energySpeedUpgradeCost;
-                energyRegenerationSpeed++;
-                energySpeedUpgradeCost *= 2;
-                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        rankingButton.addEventListener("click", () => {
-            rankingPanel.classList.toggle("show");
-        });
-
-        shopButton.addEventListener("click", () => {
-            shopPanel.classList.toggle("show");
-        });
-
-        document.body.addEventListener("click", (event) => {
-            if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
-                rankingPanel.classList.remove("show");
-            }
-
-            if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
-                shopPanel.classList.remove("show");
-            }
-        });
-
-        setInterval(() => {
-            if (energy < 100) {
-                energy += energyRegenerationSpeed;
-                updateEnergyBar();
-            }
+    function addScoreAnimation(x, y, text) {
+        const animation = document.createElement("div");
+        animation.classList.add("score-animation");
+        animation.style.left = `${x}px`;
+        animation.style.top = `${y}px`;
+        animation.innerText = `+${text}`;
+        document.body.appendChild(animation);
+        setTimeout(() => {
+            animation.remove();
         }, 1000);
-    </script>
+    }
+
+    function formatNumber(number) {
+        if (number >= 1000000) {
+            return (number / 1000000).toFixed(1) + "M";
+        } else if (number >= 1000) {
+            return (number / 1000).toFixed(1) + "K";
+        } else {
+            return number;
+        }
+    }
+
+    dragonImage.addEventListener("click", (event) => {
+        if (energy >= dragoPerClick) {
+            energy -= dragoPerClick;
+            dragoCount += dragoPerClick;
+            dragoCountSpan.innerText = formatNumber(dragoCount);
+            updateEnergyBar();
+            addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
+        }
+    });
+
+    buyUpgradeButton.addEventListener("click", () => {
+        if (dragoCount >= upgradeCost) {
+            dragoCount -= upgradeCost;
+            dragoPerClick++;
+            upgradeCost *= 2;
+            buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
+            dragoCountSpan.innerText = formatNumber(dragoCount);
+        }
+    });
+
+    buyEnergySpeedButton.addEventListener("click", () => {
+        if (dragoCount >= energySpeedUpgradeCost) {
+            dragoCount -= energySpeedUpgradeCost;
+            energyRegenerationSpeed++;
+            energySpeedUpgradeCost *= 2;
+            buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
+            dragoCountSpan.innerText = formatNumber(dragoCount);
+        }
+    });
+
+    rankingButton.addEventListener("click", () => {
+        rankingPanel.classList.toggle("show");
+    });
+
+    shopButton.addEventListener("click", () => {
+        shopPanel.classList.toggle("show");
+    });
+
+    document.body.addEventListener("click", (event) => {
+        if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
+            rankingPanel.classList.remove("show");
+        }
+
+        if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
+            shopPanel.classList.remove("show");
+        }
+    });
+
+    setInterval(() => {
+        if (energy < 100) {
+            energy += energyRegenerationSpeed;
+            updateEnergyBar();
+        }
+    }, 1000);
+</script>
 </body>
 </html>
