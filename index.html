@@ -41,11 +41,12 @@
     </div>
 
     <script>
-        // Проверка через userAgent
-        const userAgent = navigator.userAgent.toLowerCase();
+        // Проверка, что приложение открыто через Telegram Desktop
+        const isTelegramDesktop = typeof Telegram !== 'undefined' && Telegram.WebApp;
+
         const messageElement = document.getElementById("message");
 
-        if (!userAgent.includes("desktop")) {
+        if (!isTelegramDesktop) {
             messageElement.innerText = "Это приложение доступно только в Telegram Desktop!";
             document.getElementById("game-container").style.display = "none";
         } else {
