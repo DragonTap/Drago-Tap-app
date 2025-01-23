@@ -20,6 +20,20 @@
             -ms-user-select: none;
             overflow: hidden;
         }
+        /* Добавим стиль для блокировки на мобильных устройствах */
+        .blocked-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 2rem;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        /* Остальной стиль тот же */
         img {
             width: 50%;
             max-width: 300px;
@@ -263,62 +277,49 @@
                 top: 5%;
                 right: 5%;
             }
-
-            img {
-                width: 80%; /* Увеличена картинка дракона */
-                max-width: 200px;
-                margin-top: 10px;
-            }
-
-            .button {
-                font-size: 0.9rem;
-                padding: 8px 14px;
-            }
-
-            .shop-item button {
-                padding: 10px 0;
-            }
         }
     </style>
 </head>
 <body>
+    <div class="blocked-message" id="blockedMessage" style="display: none;">
+        Доступ к игре разрешен только через Telegram Desktop.
+    </div>
+
     <div id="energy-bar">
-        <div id="energy-fill" style="width: 100%;"></div>
+        <div id="energy-fill"></div>
     </div>
-    <div id="counter">
-        <span id="dragoCount">0</span> <!-- Счетчик Драго -->
-        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;"> <!-- Сделали фон прозрачным -->
-    </div>
-    <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
+
+    <div id="counter">0</div>
+    <img id="dragonImage" src="dragon.png" alt="Dragon" />
 
     <div class="button-container">
-        <div class="button" id="rankingButton">Рейтинг</div>
-        <div class="button" id="shopButton">Магазин</div>
+        <div id="buyUpgradeButton" class="button">Upgrade Click</div>
+        <div id="buyEnergySpeedButton" class="button">Energy Regen</div>
     </div>
 
-    <div class="ranking-panel" id="rankingPanel">
-        <h2>Рейтинг игроков</h2>
-        <ul id="rankingList">
-            <!-- Рейтинг будет динамически обновляться -->
-        </ul>
+    <div id="rankingButton" class="button">Ranking</div>
+    <div id="shopButton" class="button">Shop</div>
+
+    <div id="rankingPanel" class="ranking-panel">
+        <!-- Рейтинг игроков -->
     </div>
 
-    <div class="shop-panel" id="shopPanel">
-        <h2>Магазин</h2>
-        <div class="shop-item">
-            <span>Увеличить Драго за клик</span>
-            <button id="buyUpgradeButton">100 Драго</button>
-        </div>
-        <div class="shop-item">
-            <span>Увеличить скорость восстановления энергии</span>
-            <button id="buyEnergySpeedButton">500 Драго</button>
-        </div>
+    <div id="shopPanel" class="shop-panel">
+        <!-- Магазин с товарами -->
     </div>
 
     <script>
-        let dragoCount = 0;
+        // Проверка User-Agent для запрета на мобильные устройства
+        const userAgent = navigator.userAgent.toLowerCase();
+        const blockedMessage = document.getElementById('blockedMessage');
+        if (!userAgent.includes("desktop") || userAgent.includes("mobile") || userAgent.includes("android")) {
+            document.body.style.display = 'none'; // скрываем контент
+            blockedMessage.style.display = 'block'; // показываем сообщение
+        }
+
         let energy = 100;
         let energyRegenerationSpeed = 2;
+        let dragoCount = 0;
         let dragoPerClick = 1;
         let upgradeCost = 100;
         let energySpeedUpgradeCost = 500;
