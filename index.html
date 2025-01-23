@@ -21,52 +21,63 @@
             overflow: hidden;
         }
 
+        .block-message {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.5em;
+            text-align: center;
+            z-index: 100;
+        }
+
+        /* Ваши остальные стили, которые вы использовали до этого */
         img {
-            width: 50vw;
+            width: 50%;
             max-width: 300px;
             height: auto;
             cursor: pointer;
+            margin-top: 20px;
             transition: transform 0.1s ease-in-out, box-shadow 0.2s;
             user-drag: none;
             -webkit-user-drag: none;
-            -ms-user-drag: none;
-            outline: none;  /* Убираем обводку при нажатии */
         }
-
         img:active {
             transform: scale(1.1);
             box-shadow: 0 0 30px 10px rgba(255, 165, 0, 0.8);
         }
-
         #counter {
             position: absolute;
-            top: 5vh;
-            right: 5vw;
+            top: 10px;
+            right: 10px;
             background-color: rgba(255, 0, 0, 0.7); 
             padding: 10px 20px;
             border-radius: 20px;
-            font-size: 5vw;
+            font-size: 3vw;
             color: #fff;
             text-shadow: 0 0 10px #ff0000;
-            box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5); 
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 90%;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            align-items: center; 
+            align-items: center;
             justify-content: center;
         }
-
         #counter:hover {
             background-color: rgba(255, 0, 0, 0.8); 
             box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.6); 
         }
 
         #energy-bar {
-            width: 90vw;
-            height: 3vh;
+            width: 50%;
+            height: 20px;
             background-color: rgba(255, 255, 255, 0.2);
             border: 2px solid #f77f00;
             border-radius: 10px;
@@ -87,7 +98,7 @@
 
         .score-animation {
             position: absolute;
-            font-size: 3vw;
+            font-size: 2rem;
             color: #ff0000;
             font-weight: bold;
             text-shadow: 0 0 10px #ff0000;
@@ -97,10 +108,10 @@
 
         .button-container {
             position: absolute;
-            bottom: 5vh;
+            bottom: 20px;
             display: flex;
             justify-content: space-around;
-            width: 90%;
+            width: 100%;
             padding: 0 10px;
         }
 
@@ -109,8 +120,8 @@
             color: #fff;
             border: 2px solid #f77f00;
             border-radius: 10px;
-            padding: 4vw 10px;
-            font-size: 4vw;
+            padding: 10px 20px;
+            font-size: 1.2rem;
             text-align: center;
             text-shadow: 0 0 5px #f77f00;
             cursor: pointer;
@@ -127,34 +138,79 @@
             transform: scale(1.05);
         }
 
-        .ranking-panel, .shop-panel {
+        .ranking-panel {
             position: fixed;
             bottom: -100%;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
-            padding: 5vw;
+            padding: 20px;
             box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5);
             border-radius: 20px 20px 0 0;
             transition: bottom 0.3s ease-in-out;
             z-index: 100;
             overflow-y: auto;
-            width: 80vw;
+            width: 90%;
             max-height: 80%;
         }
 
-        .ranking-panel.show, .shop-panel.show {
-            bottom: 0;
+        .ranking-panel.show {
+            bottom: 10%;
+        }
+
+        .shop-panel {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 20px 20px 0 0;
+            transition: bottom 0.3s ease-in-out;
+            z-index: 100;
+            overflow-y: auto;
+            width: 90%;
+            max-height: 80%;
+        }
+
+        .shop-panel.show {
+            bottom: 10%;
+        }
+
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .shop-item button {
+            background-color: #f77f00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .shop-item button:hover {
+            background-color: #ff8c00;
         }
 
         @keyframes glow {
             0% {
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
             }
+
             50% {
                 box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.5);
             }
+
             100% {
                 box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.8);
             }
@@ -165,9 +221,10 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
             100% {
                 opacity: 0;
-                transform: translateY(-5vh);
+                transform: translateY(-50px);
             }
         }
 
@@ -175,63 +232,94 @@
             animation: glow 1.5s infinite;
         }
 
+        /* Мобильные адаптивные стили */
         @media (max-width: 768px) {
-            img {
-                width: 70vw; 
-                max-width: 250px;
+            #counter {
+                font-size: 6vw;
+                top: 5%;
+                right: 5%;
             }
 
-            #counter {
-                font-size: 8vw;
+            img {
+                width: 70%; 
+                max-width: 250px;
+                margin-top: 10px;
             }
 
             .button-container {
-                bottom: 10vh;
+                position: relative;
+                bottom: 10%;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                width: 80%;
+                width: 100%;
             }
 
             .button {
-                font-size: 5vw;
-                padding: 5vw;
+                font-size: 1rem;
+                padding: 8px 16px;
+                margin-bottom: 10px;
             }
 
             .ranking-panel, .shop-panel {
-                width: 90vw;
-                padding: 8vw;
+                width: 100%;
+                padding: 15px;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .ranking-panel.show, .shop-panel.show {
+                bottom: 0;
+            }
+
+            .shop-item {
+                flex-direction: column;
+                align-items: flex-start;
+                font-size: 1rem;
+            }
+
+            .shop-item button {
+                width: 100%;
+                padding: 12px 0;
+                margin-top: 10px;
             }
         }
 
         @media (max-width: 480px) {
-            img {
-                width: 80vw;
-                max-width: 200px;
+            #counter {
+                font-size: 8vw;
+                top: 5%;
+                right: 5%;
             }
 
-            #counter {
-                font-size: 10vw;
+            img {
+                width: 80%; 
+                max-width: 200px;
+                margin-top: 10px;
             }
 
             .button {
-                font-size: 6vw;
-                padding: 6vw;
+                font-size: 0.9rem;
+                padding: 8px 14px;
             }
 
-            .ranking-panel, .shop-panel {
-                padding: 10vw;
+            .shop-item button {
+                padding: 10px 0;
             }
         }
+
     </style>
 </head>
 <body>
+    <div class="block-message" id="blockMessage" style="display: none;">
+        Доступ запрещен на мобильных устройствах. Пожалуйста, используйте Telegram Desktop.
+    </div>
+
     <div id="energy-bar">
         <div id="energy-fill" style="width: 100%;"></div>
     </div>
     <div id="counter">
-        <span id="dragoCount">0</span>
-        <img src="drago_icon.png" alt="Drago Icon" style="width: 30px; margin-left: 10px;">
+        <span id="dragoCount">0</span> <!-- Счетчик Драго -->
+        <img src="drago_icon.png" alt="Drago Icon" style="width: 40px; margin-left: 10px; background-color: transparent;">
     </div>
     <img id="dragonImage" src="dragon.png" alt="Нажмите на дракона, чтобы заработать Драго!">
 
@@ -254,116 +342,28 @@
             <button id="buyUpgradeButton">100 Драго</button>
         </div>
         <div class="shop-item">
-            <span>Увеличить скорость восстановления энергии</span>
-            <button id="buyEnergySpeedButton">500 Драго</button>
+            <span>Ускорить восстановление энергии</span>
+            <button id="buySpeedUpgradeButton">200 Драго</button>
         </div>
     </div>
 
     <script>
-        let dragoCount = 0;
-        let energy = 100;
-        let energyRegenerationSpeed = 2;
-        let dragoPerClick = 1;
-        let upgradeCost = 100;
-        let energySpeedUpgradeCost = 500;
+        // Проверка устройства
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isTelegramDesktop = /TelegramDesktop/i.test(navigator.userAgent);
 
-        const dragoCountSpan = document.getElementById("dragoCount");
-        const dragonImage = document.getElementById("dragonImage");
-        const rankingButton = document.getElementById("rankingButton");
-        const shopButton = document.getElementById("shopButton");
-        const rankingPanel = document.getElementById("rankingPanel");
-        const shopPanel = document.getElementById("shopPanel");
-        const buyUpgradeButton = document.getElementById("buyUpgradeButton");
-        const buyEnergySpeedButton = document.getElementById("buyEnergySpeedButton");
-
-        function updateEnergyBar() {
-            const energyFill = document.getElementById("energy-fill");
-            energyFill.style.width = `${(energy / 100) * 100}%`;
+        if (isMobile && !isTelegramDesktop) {
+            document.getElementById("blockMessage").style.display = "block";
+            document.body.style.display = "none";
+        } else if (!isTelegramDesktop) {
+            document.getElementById("blockMessage").innerHTML = "Пожалуйста, используйте Telegram Desktop.";
+            document.getElementById("blockMessage").style.display = "block";
+            document.body.style.display = "none";
+        } else {
+            document.body.style.display = "flex";
         }
-
-        function addScoreAnimation(x, y, text) {
-            const animation = document.createElement("div");
-            animation.classList.add("score-animation");
-            animation.style.left = `${x}px`;
-            animation.style.top = `${y}px`;
-            animation.innerText = `+${text}`;
-            document.body.appendChild(animation);
-            setTimeout(() => {
-                animation.remove();
-            }, 1000);
-        }
-
-        function formatNumber(number) {
-            if (number >= 1000000) {
-                return (number / 1000000).toFixed(1) + "M";
-            } else if (number >= 1000) {
-                return (number / 1000).toFixed(1) + "K";
-            } else {
-                return number;
-            }
-        }
-
-        dragonImage.addEventListener("click", (event) => {
-            if (energy >= dragoPerClick) {
-                energy -= dragoPerClick;
-                dragoCount += dragoPerClick;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-                updateEnergyBar();
-                addScoreAnimation(event.pageX, event.pageY, dragoPerClick);
-            }
-        });
-
-        buyUpgradeButton.addEventListener("click", () => {
-            if (dragoCount >= upgradeCost) {
-                dragoCount -= upgradeCost;
-                dragoPerClick++;
-                upgradeCost *= 2;
-                buyUpgradeButton.innerText = `${formatNumber(upgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        buyEnergySpeedButton.addEventListener("click", () => {
-            if (dragoCount >= energySpeedUpgradeCost) {
-                dragoCount -= energySpeedUpgradeCost;
-                energyRegenerationSpeed++;
-                energySpeedUpgradeCost *= 2;
-                buyEnergySpeedButton.innerText = `${formatNumber(energySpeedUpgradeCost)} Драго`;
-                dragoCountSpan.innerText = formatNumber(dragoCount);
-            }
-        });
-
-        rankingButton.addEventListener("click", () => {
-            rankingPanel.classList.toggle("show");
-        });
-
-        shopButton.addEventListener("click", () => {
-            shopPanel.classList.toggle("show");
-        });
-
-        document.body.addEventListener("click", (event) => {
-            if (!rankingPanel.contains(event.target) && !rankingButton.contains(event.target)) {
-                rankingPanel.classList.remove("show");
-            }
-
-            if (!shopPanel.contains(event.target) && !shopButton.contains(event.target)) {
-                shopPanel.classList.remove("show");
-            }
-        });
-
-        dragonImage.addEventListener("contextmenu", (event) => {
-            event.preventDefault();  // Запрещаем контекстное меню на изображении
-        });
-
-        function regenerateEnergy() {
-            if (energy < 100) {
-                energy += energyRegenerationSpeed / 60;
-                if (energy > 100) energy = 100;
-                updateEnergyBar();
-            }
-        }
-
-        setInterval(regenerateEnergy, 1000 / 60); // Обновляем энергию каждую секунду
+        
+        // Ваша остальная логика игры, например, обработка кликов по дракону
     </script>
 </body>
 </html>
