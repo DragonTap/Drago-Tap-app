@@ -349,6 +349,10 @@
             }
         });
 
+        dragonImage.addEventListener("contextmenu", (event) => {
+            event.preventDefault();  // Запрещаем контекстное меню на изображении
+        });
+
         function regenerateEnergy() {
             if (energy < 100) {
                 energy += energyRegenerationSpeed / 60;
