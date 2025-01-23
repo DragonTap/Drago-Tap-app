@@ -52,6 +52,7 @@
       justify-content: center;
       gap: 20px;
       margin-top: 30px;
+      flex-wrap: wrap;
     }
     .button {
       padding: 10px 20px;
@@ -61,6 +62,7 @@
       border: none;
       cursor: pointer;
       border-radius: 5px;
+      width: 200px;
     }
     .button:hover {
       background-color: #0056b3;
@@ -72,6 +74,9 @@
       }
       .info {
         font-size: 14px;
+      }
+      .button {
+        width: 150px;
       }
     }
   </style>
@@ -86,20 +91,30 @@
     </div>
     <div class="buttons">
       <button class="button" onclick="buyUpgrade()">Улучшение (+1 Drago за клик)</button>
+      <button class="button" onclick="buyAutoClicker()">Купить автокликер (500 Drago)</button>
+      <button class="button" onclick="buyEnergyUpgrade()">Увеличение энергии (200 Drago)</button>
+      <button class="button" onclick="buyEnergyRegeneration()">Ускорение восстановления энергии (300 Drago)</button>
     </div>
   </div>
 
   <script>
     let dragoCount = 0;
     let energy = 100;
-    let energyRegeneration = 2; // скорость восстановления энергии
-    let energyDecreasePerClick = 10; // количество энергии, которое тратится за клик
-    let dragoPerClick = 1; // сколько Drago дается за клик
-    let upgradeCost = 10; // начальная стоимость улучшения
+    let energyRegeneration = 2;
+    let energyDecreasePerClick = 10;
+    let dragoPerClick = 1;
+    let upgradeCost = 10;
+    let autoClickerCost = 500;
+    let energyUpgradeCost = 200;
+    let regenerationUpgradeCost = 300;
+    let maxEnergy = 100;
+    let autoClickerActive = false;
+    let autoClickerInterval;
 
     const energyBar = document.getElementById('energyBar');
     const energyText = document.getElementById('energy');
     const dragoCountText = document.getElementById('dragoCount');
+    const dragonElement = document.getElementById('dragon');
 
     function earnDrago() {
       if (energy >= energyDecreasePerClick) {
@@ -119,9 +134,9 @@
     }
 
     function regenerateEnergy() {
-      if (energy < 100) {
+      if (energy < maxEnergy) {
         energy += energyRegeneration;
-        if (energy > 100) energy = 100;
+        if (energy > maxEnergy) energy = maxEnergy;
       }
       updateGame();
     }
@@ -130,7 +145,7 @@
       if (dragoCount >= upgradeCost) {
         dragoCount -= upgradeCost;
         dragoPerClick += 1;
-        upgradeCost *= 2; // удваиваем стоимость улучшения
+        upgradeCost *= 2;
         updateGame();
         alert('Улучшение куплено!');
       } else {
@@ -138,7 +153,51 @@
       }
     }
 
-    setInterval(regenerateEnergy, 1000); // восстанавливаем энергию каждую секунду
+    function buyAutoClicker() {
+      if (dragoCount >= autoClickerCost) {
+        dragoCount -= autoClickerCost;
+        autoClickerActive = true;
+        autoClickerInterval = setInterval(earnDrago, 1000);
+        updateGame();
+        alert('Автокликер активирован!');
+      } else {
+        alert('Недостаточно Drago для покупки автокликера.');
+      }
+    }
+
+    function stopAutoClicker() {
+      clearInterval(autoClickerInterval);
+      autoClickerActive = false;
+      updateGame();
+      alert('Автокликер остановлен.');
+    }
+
+    function buyEnergyUpgrade() {
+      if (dragoCount >= energyUpgradeCost) {
+        dragoCount -= energyUpgradeCost;
+        maxEnergy += 50; // Увеличиваем максимальную энергию
+        energyUpgradeCost *= 2;
+        updateGame();
+        alert('Максимальная энергия увеличена!');
+      } else {
+        alert('Недостаточно Drago для покупки улучшения.');
+      }
+    }
+
+    function buyEnergyRegeneration() {
+      if (dragoCount >= regenerationUpgradeCost) {
+        dragoCount -= regenerationUpgradeCost;
+        energyRegeneration += 1; // Ускоряем восстановление энергии
+        regenerationUpgradeCost *= 2;
+        updateGame();
+        alert('Восстановление энергии ускорено!');
+      } else {
+        alert('Недостаточно Drago для покупки улучшения.');
+      }
+    }
+
+    setInterval(regenerateEnergy, 1000);
+
   </script>
 </body>
 </html>
