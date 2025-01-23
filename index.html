@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-    <div class="game-container" id="game-container">
+    <div class="game-container">
         <h1>Drago Tap</h1>
         <img src="dragon.png" alt="Dragon" class="dragon-image" onclick="tapDragon()">
         <div class="score">Score: <span id="score">0</span></div>
@@ -56,104 +56,19 @@
     </div>
 
     <script>
-        // Проверка, что приложение открыто в Telegram Desktop
-        if (navigator.userAgent.indexOf("Telegram Desktop") === -1) {
-            document.getElementById('game-container').innerHTML = "<h1>Извините, эта игра доступна только в Telegram Desktop!</h1>";
-        } else {
-            let score = 0;
+        let score = 0;
 
-            // Функция клика по дракону
-            function tapDragon() {
-                score++;
-                document.getElementById('score').textContent = score;
-            }
+        // Функция клика по дракону
+        function tapDragon() {
+            score++;
+            document.getElementById('score').textContent = score;
+        }
 
-            // Функция для улучшений
-            function upgrade() {
-                alert("Dragon upgraded!");
-                // Здесь можно добавить логику для улучшений, например, увеличение количества очков за клик
-            }
+        // Функция для улучшений
+        function upgrade() {
+            alert("Dragon upgraded!");
+            // Здесь можно добавить логику для улучшений
         }
     </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hamster Combat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-        #battleArea {
-            margin: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            margin: 10px;
-            padding: 15px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Hamster Combat</h1>
-
-    <!-- Проверка на Telegram Desktop -->
-    <div id="warning" class="hidden">
-        <p>Это приложение доступно только в Telegram Desktop!</p>
-    </div>
-
-    <div id="battleArea">
-        <p>Сражайся с противником!</p>
-        <button onclick="attack()">Атаковать</button>
-        <button onclick="defend()">Защищаться</button>
-        <button onclick="reload()">Перезарядка</button>
-    </div>
-
-    <script>
-        // Проверка User-Agent для Telegram Desktop
-        if (navigator.userAgent.indexOf("TelegramDesktop") === -1) {
-            document.getElementById('battleArea').classList.add('hidden');  // Скрываем игру
-            document.getElementById('warning').classList.remove('hidden'); // Показываем предупреждение
-        }
-
-        // Логика игры
-        function attack() {
-            alert('Атака!');
-            // Здесь можно добавить логику атаки
-        }
-
-        function defend() {
-            alert('Защита!');
-            // Здесь можно добавить логику защиты
-        }
-
-        function reload() {
-            alert('Перезарядка!');
-            // Здесь можно добавить логику перезарядки
-        }
-    </script>
-
 </body>
 </html>
