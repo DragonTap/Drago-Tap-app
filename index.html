@@ -84,6 +84,12 @@
             margin-bottom: 20px;
         }
 
+        #completed-text {
+            font-size: 2rem;
+            color: yellow; /* Желтый цвет */
+            animation: floatText 2s infinite;
+        }
+
         #enter-game-btn {
             padding: 10px 20px;
             font-size: 1.5rem;
@@ -133,6 +139,10 @@
             #enter-game-btn {
                 font-size: 1.2rem;
             }
+
+            #completed-text {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 400px) {
@@ -157,6 +167,10 @@
             #enter-game-btn {
                 font-size: 1rem;
             }
+
+            #completed-text {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -168,7 +182,7 @@
             Ваш браузер не поддерживает видео.
         </video>
         <div id="loading-text">
-            <p>Зажигаем экран!</p>
+            <p>Зажигаем экран📱!</p>
             <p id="loading-progress">0%</p>
         </div>
         <div id="loading-facts">
@@ -179,7 +193,7 @@
     <!-- Экран завершения загрузки и кнопка для входа в игру -->
     <div id="completed-screen" style="display: none;">
         <img id="dragon-image" src="dragon.jpg" alt="Dragon Image">
-        <p>Игра загружена!</p>
+        <p id="completed-text">Игра загружена!</p>
         <button id="enter-game-btn">Войти в игру</button>
     </div>
 
@@ -199,6 +213,7 @@
             const loadingFacts = document.getElementById('loading-facts');
             const loadingVideo = document.getElementById('loading-video');
             const enterGameBtn = document.getElementById('enter-game-btn');
+            const completedText = document.getElementById('completed-text');
 
             // Симуляция загрузки, длительностью 5 секунд
             let progress = 0;
@@ -219,10 +234,9 @@
 
             // Смена подсказок
             const phrases = [
-                'Зажигаем экран!',
-                'Выгуливаем дракона!',
-                'Чистим ему зубы!',
-                'Собираем яйца!',
+                'Выгуливаем дракона🏞️!',
+                'Чистим ему зубы🦷!',
+                'Собираем яйца🥚!',
                 'ВХОД'
             ];
 
@@ -231,7 +245,7 @@
             setInterval(() => {
                 loadingText.querySelector('p').textContent = phrases[phraseIndex];
                 phraseIndex = (phraseIndex + 1) % phrases.length;
-            }, 1000); // Каждую секунду смена текста
+            }, 1100); // Каждую секунду смена текста
 
             // Массив случайных фактов о драконах
             const dragonFacts = [
