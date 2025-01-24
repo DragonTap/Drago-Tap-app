@@ -30,24 +30,24 @@
         }
 
         #loading-video {
-            width: 80%; /* Видео будет занимать 80% от ширины экрана */
-            max-width: 500px; /* Максимальная ширина видео */
+            width: 80%;
+            max-width: 500px;
             height: auto;
-            margin-bottom: 20px; /* Отступ снизу для текста */
+            margin-bottom: 20px;
         }
 
         #loading-text {
             font-size: 2rem;
-            color: #ff0000; /* Красный цвет для текста */
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; /* Эффект неона */
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
             animation: floatText 2s infinite;
             text-align: center;
         }
 
         #loading-progress {
             font-size: 1.5rem;
-            color: #ff0000; /* Красный цвет для процентов */
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; /* Эффект неона */
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
             margin-top: 10px;
         }
 
@@ -60,68 +60,78 @@
         #game-screen {
             width: 100%;
             height: 100%;
-            background-color: #121212; /* Цвет фона игры */
-            color: white;
+            background: linear-gradient(145deg, #141e30, #243b55);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
+        }
+
+        #tap-counter {
+            font-size: 2.5rem;
+            color: #f7d354;
+            text-shadow: 0 0 10px #f7d354, 0 0 20px #f7d354;
+            margin-bottom: 20px;
         }
 
         #tap-button {
-            background-color: #ff0000;
+            background: linear-gradient(145deg, #ff7e5f, #feb47b);
             color: white;
             font-size: 2rem;
             padding: 20px 40px;
             border: none;
             cursor: pointer;
-            border-radius: 10px;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-            transition: transform 0.1s;
+            border-radius: 50px;
+            text-shadow: 0 0 10px #ff7e5f, 0 0 20px #feb47b;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         #tap-button:hover {
             transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        #tap-button:active {
+            transform: scale(0.95);
+        }
+
+        #tap-hint {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #f7d354;
+            text-shadow: 0 0 10px #f7d354, 0 0 20px #f7d354;
         }
 
         /* Адаптивные стили */
         @media (max-width: 600px) {
-            #loading-text {
-                font-size: 1.5rem;
-            }
-
-            #loading-video {
-                width: 100%;
-                max-width: 400px;
-            }
-
-            #loading-progress {
-                font-size: 1rem;
+            #tap-counter {
+                font-size: 2rem;
             }
 
             #tap-button {
                 font-size: 1.5rem;
                 padding: 15px 30px;
             }
+
+            #tap-hint {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 400px) {
-            #loading-text {
-                font-size: 1.2rem;
-            }
-
-            #loading-video {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            #loading-progress {
-                font-size: 0.8rem;
+            #tap-counter {
+                font-size: 1.5rem;
             }
 
             #tap-button {
                 font-size: 1.2rem;
                 padding: 12px 25px;
+            }
+
+            #tap-hint {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -139,9 +149,11 @@
         </div>
     </div>
 
-    <!-- Игровой экран с кнопкой тапалки -->
+    <!-- Игровой экран -->
     <div id="game-screen" style="display:none;">
+        <div id="tap-counter">Тапы: 0</div>
         <button id="tap-button">Тапаем на дракона!</button>
+        <div id="tap-hint">Продолжайте тапать, чтобы заработать больше очков!</div>
     </div>
 
     <script>
@@ -151,13 +163,14 @@
             const loadingText = document.getElementById('loading-text');
             const loadingProgress = document.getElementById('loading-progress');
             const loadingVideo = document.getElementById('loading-video');
+            const tapCounter = document.getElementById('tap-counter');
             const tapButton = document.getElementById('tap-button');
             
             // Симуляция загрузки, длительностью 5 секунд
             let progress = 0;
-            const loadingDuration = 5000; // 5 секунд для загрузки
-            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
-            const increment = (100 / (loadingDuration / intervalTime)); // Инкремент прогресса за один интервал
+            const loadingDuration = 5000;
+            const intervalTime = 50;
+            const increment = (100 / (loadingDuration / intervalTime));
 
             const loadingInterval = setInterval(() => {
                 if (progress < 100) {
@@ -170,11 +183,6 @@
                 }
             }, intervalTime);
 
-            // Когда видео загрузилось, начинаем прогресс
-            loadingVideo.oncanplay = () => {
-                loadingInterval;
-            };
-
             // Массив фраз для текста
             const phrases = [
                 'Выгуливаем дракона!',
@@ -185,16 +193,16 @@
             ];
 
             let phraseIndex = 0;
-
-            // Функция для смены текста каждую секунду
             setInterval(() => {
                 loadingText.querySelector('p').textContent = phrases[phraseIndex];
-                phraseIndex = (phraseIndex + 1) % phrases.length; // Цикличность смены фраз
-            }, 1000); // Каждую секунду
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }, 1000);
 
-            // Реакция на клик по кнопке
+            // Счетчик тапов
+            let tapCount = 0;
             tapButton.addEventListener('click', () => {
-                alert('Вы тапнули на дракона!');
+                tapCount++;
+                tapCounter.textContent = `Тапы: ${tapCount}`;
             });
         });
     </script>
