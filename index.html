@@ -5,319 +5,204 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Drago Tap</title>
   <style>
-    /* Общие стили */
     body {
-      font-family: 'Arial', sans-serif;
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #ff6f61, #ff9671);
-      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    #loadingScreen {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+      width: 100vw;
       height: 100vh;
-      overflow: hidden;
+      background-color: black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
     }
-
-    .game-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 20px;
-      padding: 20px;
-      width: 100%;
+    #loadingScreen video {
+      width: 80%;
       max-width: 500px;
-    }
-
-    .dragon {
-      width: 250px;
-      height: 250px;
-      background-image: url('dragon.png');
-      background-size: cover;
-      background-position: center;
-      border-radius: 50%;
-      cursor: pointer;
-      margin-bottom: 30px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .dragon:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-    }
-
-    .info {
+      height: auto;
+      object-fit: cover;
       margin-bottom: 20px;
-      width: 100%;
     }
-
-    .info p {
-      font-size: 20px;
-      margin: 10px 0;
-    }
-
-    .energy-container {
-      margin-bottom: 10px;
-      width: 100%;
-    }
-
-    .energy-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .bar {
-      width: 100%;
-      height: 12px;
-      background-color: #fff;
-      border-radius: 6px;
-      margin-top: 10px;
+    #loadingBarContainer {
+      width: 80%;
+      height: 10px;
+      background-color: #444;
+      border-radius: 5px;
       overflow: hidden;
+      margin-top: 20px;
+      position: relative;
     }
-
-    .energy-bar {
+    #loadingBar {
+      width: 0;
       height: 100%;
-      background-color: #4caf50;
-      transition: width 0.5s ease-in-out;
+      background-color: #FF4500;
+      animation: fillBar 3s linear forwards;
     }
-
-    /* Кнопки и меню */
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 100%;
+    #loadingScreen p {
+      margin-top: 20px;
+      font-size: 2rem;
+      color: red;
+      text-shadow: 0 0 10px red, 0 0 20px red;
+      animation: floatText 3s ease-in-out infinite;
     }
-
-    .button {
-      padding: 12px;
-      background-color: #f39c12;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    @keyframes floatText {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
     }
-
-    .button:hover {
-      background-color: #e67e22;
+    @keyframes fillBar {
+      0% {
+        width: 0;
+      }
+      100% {
+        width: 100%;
+      }
     }
-
-    .button:active {
-      background-color: #d35400;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    .menu {
+    #game {
       display: none;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .menu.active {
-      display: flex;
-    }
-
-    .toggle-button {
-      padding: 12px;
-      background-color: #2ecc71;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
       color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    #energyBarContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 20px;
+      background-color: #444;
+    }
+    #energyBar {
+      width: 100%;
+      height: 100%;
+      background-color: #32CD32;
+    }
+    #dragon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 20vw;
+      max-width: 200px;
+      height: auto;
+      cursor: pointer;
+    }
+    #score {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
     }
 
-    .toggle-button:hover {
-      background-color: #27ae60;
-    }
-
-    .toggle-button:active {
-      background-color: #1abc9c;
-    }
-
-    /* Адаптивность */
+    /* Media Queries для адаптации */
     @media (max-width: 768px) {
-      .dragon {
-        width: 200px;
-        height: 200px;
+      #loadingScreen video {
+        width: 90%;
+        max-width: 400px;
       }
-
-      .info p {
-        font-size: 18px;
+      #loadingScreen p {
+        font-size: 1.5rem;
       }
-
-      .button {
-        font-size: 16px;
+      #dragon {
+        width: 40vw;
+      }
+      #score {
+        font-size: 1.2rem;
       }
     }
 
     @media (max-width: 480px) {
-      .dragon {
-        width: 150px;
-        height: 150px;
+      #loadingScreen video {
+        width: 95%;
+        max-width: 300px;
       }
-
-      .info p {
-        font-size: 16px;
+      #loadingScreen p {
+        font-size: 1.2rem;
       }
-
-      .button {
-        font-size: 14px;
-        padding: 10px;
+      #dragon {
+        width: 50vw;
       }
-
-      .buttons {
-        gap: 10px;
+      #score {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="game-container">
-    <!-- Дракон -->
-    <div class="dragon" id="dragon" onclick="earnDrago()"></div>
-
-    <!-- Информация -->
-    <div class="info">
-      <p id="dragoCount">Drago: 0</p>
-      <!-- Энергия -->
-      <div class="energy-container">
-        <div class="energy-text">
-          <span>Энергия: <span id="energyPercentage">100%</span></span>
-          <span>+<span id="energyIncrease">2</span>%/сек</span>
-        </div>
-        <div class="bar"><div class="energy-bar" id="energyBar"></div></div>
-      </div>
+  <div id="loadingScreen">
+    <video autoplay loop muted>
+      <source src="drago_zagruska.mp4" type="video/mp4">
+      Ваш браузер не поддерживает видео.
+    </video>
+    <div id="loadingBarContainer">
+      <div id="loadingBar"></div>
     </div>
-
-    <!-- Основная кнопка для открытия меню -->
-    <button class="toggle-button" onclick="toggleMenu()">Магазин улучшений</button>
-
-    <!-- Панель с кнопками улучшений -->
-    <div class="menu" id="menu">
-      <button class="button" onclick="buyUpgrade()">Улучшение (+1 Drago за клик)</button>
-      <button class="button" onclick="buyAutoClicker()">Купить автокликер (500 Drago)</button>
-      <button class="button" onclick="buyEnergyUpgrade()">Увеличение энергии (200 Drago)</button>
-      <button class="button" onclick="buyEnergyRegeneration()">Ускорение восстановления энергии (300 Drago)</button>
+    <p>Drago Tap зажигает экран!</p>
+  </div>
+  <div id="game">
+    <div id="energyBarContainer">
+      <div id="energyBar"></div>
     </div>
+    <div id="score">Очки: 0</div>
+    <img id="dragon" src="dragon.png" alt="Дракон">
   </div>
 
   <script>
-    let dragoCount = 0;
-    let energy = 100;
-    let energyRegeneration = 2;
-    let energyDecreasePerClick = 10;
-    let dragoPerClick = 1;
-    let upgradeCost = 10;
-    let autoClickerCost = 500;
-    let energyUpgradeCost = 200;
-    let regenerationUpgradeCost = 300;
-    let maxEnergy = 100;
-    let autoClickerActive = false;
-    let autoClickerInterval;
-
+    const loadingScreen = document.getElementById('loadingScreen');
+    const game = document.getElementById('game');
+    const dragon = document.getElementById('dragon');
+    const scoreElement = document.getElementById('score');
     const energyBar = document.getElementById('energyBar');
-    const energyText = document.getElementById('energyPercentage');
-    const energyIncreaseText = document.getElementById('energyIncrease');
-    const dragoCountText = document.getElementById('dragoCount');
-    const dragonElement = document.getElementById('dragon');
-    const menu = document.getElementById('menu');
 
-    function earnDrago() {
-      if (energy >= energyDecreasePerClick) {
-        dragoCount += dragoPerClick;
-        energy -= energyDecreasePerClick;
-        updateGame();
-      } else {
-        alert('Недостаточно энергии!');
+    let score = 0;
+    let energy = 100;
+    const maxEnergy = 100;
+    let energyRegenInterval;
+
+    // Показываем игру после загрузки
+    setTimeout(() => {
+      loadingScreen.style.display = 'none';
+      game.style.display = 'block';
+      startEnergyRegeneration();
+    }, 3000); // Загрузка длится 3 секунды
+
+    // Функция регенерации энергии
+    function startEnergyRegeneration() {
+      energyRegenInterval = setInterval(() => {
+        if (energy < maxEnergy) {
+          energy++;
+          updateEnergyBar();
+        }
+      }, 1000); // Регенерация 1 энергия в секунду
+    }
+
+    // Обновление отображения шкалы энергии
+    function updateEnergyBar() {
+      energyBar.style.width = `${(energy / maxEnergy) * 100}%`;
+    }
+
+    // Логика кликов по дракону
+    dragon.addEventListener('click', () => {
+      if (energy > 0) {
+        score++;
+        energy--;
+        updateEnergyBar();
+        scoreElement.textContent = `Очки: ${score}`;
       }
-    }
-
-    function updateGame() {
-      dragoCountText.textContent = `Drago: ${dragoCount}`;
-      energyText.textContent = `${energy}%`;
-      energyBar.style.width = `${energy}%`;
-      regenerateEnergy();
-    }
-
-    function regenerateEnergy() {
-      if (energy < maxEnergy) {
-        energy += energyRegeneration;
-        if (energy > maxEnergy) energy = maxEnergy;
-      }
-      updateGame();
-    }
-
-    function toggleMenu() {
-      menu.classList.toggle('active');
-    }
-
-    function buyUpgrade() {
-      if (dragoCount >= upgradeCost) {
-        dragoCount -= upgradeCost;
-        dragoPerClick += 1;
-        upgradeCost *= 2;
-        updateGame();
-        alert('Улучшение куплено!');
-      } else {
-        alert('Недостаточно Drago для покупки улучшения.');
-      }
-    }
-
-    function buyAutoClicker() {
-      if (dragoCount >= autoClickerCost) {
-        dragoCount -= autoClickerCost;
-        autoClickerActive = true;
-        autoClickerInterval = setInterval(earnDrago, 1000);
-        updateGame();
-        alert('Автокликер активирован!');
-      } else {
-        alert('Недостаточно Drago для покупки автокликера.');
-      }
-    }
-
-    function stopAutoClicker() {
-      clearInterval(autoClickerInterval);
-      autoClickerActive = false;
-      updateGame();
-      alert('Автокликер остановлен.');
-    }
-
-    function buyEnergyUpgrade() {
-      if (dragoCount >= energyUpgradeCost) {
-        dragoCount -= energyUpgradeCost;
-        maxEnergy += 50; 
-        energyUpgradeCost *= 2;
-        updateGame();
-        alert('Максимальная энергия увеличена!');
-      } else {
-        alert('Недостаточно Drago для покупки улучшения.');
-      }
-    }
-
-    function buyEnergyRegeneration() {
-      if (dragoCount >= regenerationUpgradeCost) {
-        dragoCount -= regenerationUpgradeCost;
-        energyRegeneration += 1; 
-        regenerationUpgradeCost *= 2;
-        updateGame();
-        alert('Восстановление энергии ускорено!');
-      } else {
-        alert('Недостаточно Drago для покупки улучшения.');
-      }
-    }
-
-    setInterval(regenerateEnergy, 1000);
+    });
   </script>
 </body>
 </html>
