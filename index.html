@@ -1,264 +1,202 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drago Tap</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      user-select: none; /* Отключение выделения текста */
-      -webkit-tap-highlight-color: transparent; /* Убирает выделение при тапе */
-    }
-    #loadingScreen {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100vw;
-      height: 100vh;
-      background-color: black;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 10;
-    }
-    #loadingScreen video {
-      width: 80%;
-      max-width: 500px;
-      height: auto;
-      object-fit: cover;
-      margin-bottom: 20px;
-      pointer-events: none; /* Отключение взаимодействия с видео */
-    }
-    #loadingBarContainer {
-      width: 80%;
-      height: 10px;
-      background-color: #444;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 20px;
-      position: relative;
-    }
-    #loadingBar {
-      width: 0;
-      height: 100%;
-      background-color: #FF4500;
-      animation: fillBar 3s linear forwards;
-    }
-    #loadingScreen p {
-      margin-top: 20px;
-      font-size: 2rem;
-      color: red;
-      text-shadow: 0 0 10px red, 0 0 20px red;
-      animation: floatText 3s ease-in-out infinite;
-    }
-    @keyframes floatText {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-    @keyframes fillBar {
-      0% {
-        width: 0%;
-      }
-      100% {
-        width: 100%;
-      }
-    }
-    #game {
-      display: none;
-      width: 100vw;
-      height: 100vh;
-      background-color: black;
-      color: white;
-    }
-    #energyBarContainer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 20px;
-      background-color: #444;
-    }
-    #energyBar {
-      width: 100%;
-      height: 100%;
-      background-color: #32CD32;
-    }
-    #dragon {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 20vw;
-      max-width: 200px;
-      height: auto;
-      cursor: pointer;
-      user-select: none; /* Отключение выделения изображения */
-      pointer-events: auto; /* Оставляем кликабельность */
-      -webkit-user-drag: none; /* Убирает перетаскивание */
-      transition: box-shadow 0.3s ease-in-out; /* Плавный переход для свечения */
-    }
-    #dragon.active {
-      box-shadow: 0 0 20px red, 0 0 40px red, 0 0 60px red; /* Эффект свечения */
-    }
-    #score {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #fff;
-      user-select: none; /* Отключение выделения текста */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drago Tap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Анимация всплывающего текста */
-    .tap-effect {
-      position: absolute;
-      font-size: 1.5rem;
-      color: #FFD700;
-      font-weight: bold;
-      animation: tapAnimation 1s ease-out forwards;
-      pointer-events: none;
-    }
-    @keyframes tapAnimation {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-50px) scale(1.5);
-        opacity: 0;
-      }
-    }
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
 
-    /* Media Queries для адаптации */
-    @media (max-width: 768px) {
-      #loadingScreen video {
-        width: 90%;
-        max-width: 400px;
-      }
-      #loadingScreen p {
-        font-size: 1.5rem;
-      }
-      #dragon {
-        width: 40vw;
-      }
-      #score {
-        font-size: 1.2rem;
-      }
-    }
+        #loading-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
 
-    @media (max-width: 480px) {
-      #loadingScreen video {
-        width: 95%;
-        max-width: 300px;
-      }
-      #loadingScreen p {
-        font-size: 1.2rem;
-      }
-      #dragon {
-        width: 50vw;
-      }
-      #score {
-        font-size: 1rem;
-      }
-    }
-  </style>
+        #loading-video {
+            width: 80%; /* Видео будет занимать 80% от ширины экрана */
+            max-width: 500px; /* Максимальная ширина видео */
+            height: auto;
+            margin-bottom: 20px; /* Отступ снизу для текста */
+        }
+
+        #loading-text {
+            font-size: 2rem;
+            color: #ff0000; /* Красный цвет для текста */
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; /* Эффект неона */
+            animation: floatText 2s infinite;
+            text-align: center;
+        }
+
+        #loading-progress {
+            font-size: 1.5rem;
+            color: #ff0000; /* Красный цвет для процентов */
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000; /* Эффект неона */
+            margin-top: 10px;
+        }
+
+        @keyframes floatText {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        #game-screen {
+            width: 100%;
+            height: 100%;
+            background-color: #121212; /* Цвет фона игры */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #tap-button {
+            background-color: #ff0000;
+            color: white;
+            font-size: 2rem;
+            padding: 20px 40px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            transition: transform 0.1s;
+        }
+
+        #tap-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Адаптивные стили */
+        @media (max-width: 600px) {
+            #loading-text {
+                font-size: 1.5rem;
+            }
+
+            #loading-video {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            #loading-progress {
+                font-size: 1rem;
+            }
+
+            #tap-button {
+                font-size: 1.5rem;
+                padding: 15px 30px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            #loading-text {
+                font-size: 1.2rem;
+            }
+
+            #loading-video {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            #loading-progress {
+                font-size: 0.8rem;
+            }
+
+            #tap-button {
+                font-size: 1.2rem;
+                padding: 12px 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div id="loadingScreen">
-    <video autoplay loop muted>
-      <source src="drago_zagruska.mp4" type="video/mp4">
-      Ваш браузер не поддерживает видео.
-    </video>
-    <div id="loadingBarContainer">
-      <div id="loadingBar"></div>
+    <!-- Загрузочный экран -->
+    <div id="loading-screen">
+        <video id="loading-video" autoplay muted loop>
+            <source src="drago_zagruska.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <div id="loading-text">
+            <p>Зажигаем экран!</p>
+            <p id="loading-progress">0%</p>
+        </div>
     </div>
-    <p>Drago Tap зажигает экран!</p>
-  </div>
-  <div id="game">
-    <div id="energyBarContainer">
-      <div id="energyBar"></div>
+
+    <!-- Игровой экран с кнопкой тапалки -->
+    <div id="game-screen" style="display:none;">
+        <button id="tap-button">Тапаем на дракона!</button>
     </div>
-    <div id="score">Очки: 0</div>
-    <img id="dragon" src="dragon.png" alt="Дракон" draggable="false" ondragstart="return false;" oncontextmenu="return false;">
-  </div>
 
-  <script>
-    const loadingScreen = document.getElementById('loadingScreen');
-    const game = document.getElementById('game');
-    const dragon = document.getElementById('dragon');
-    const scoreElement = document.getElementById('score');
-    const energyBar = document.getElementById('energyBar');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const gameScreen = document.getElementById('game-screen');
+            const loadingText = document.getElementById('loading-text');
+            const loadingProgress = document.getElementById('loading-progress');
+            const loadingVideo = document.getElementById('loading-video');
+            const tapButton = document.getElementById('tap-button');
+            
+            // Симуляция загрузки, длительностью 5 секунд
+            let progress = 0;
+            const loadingDuration = 5000; // 5 секунд для загрузки
+            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
+            const increment = (100 / (loadingDuration / intervalTime)); // Инкремент прогресса за один интервал
 
-    let score = 0;
-    let energy = 100;
-    const maxEnergy = 100;
-    let energyRegenInterval;
+            const loadingInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += increment;
+                    loadingProgress.textContent = `${Math.floor(progress)}%`;
+                } else {
+                    clearInterval(loadingInterval);
+                    loadingScreen.style.display = 'none';
+                    gameScreen.style.display = 'flex';
+                }
+            }, intervalTime);
 
-    // Показываем игру после загрузки
-    setTimeout(() => {
-      loadingScreen.style.display = 'none';
-      game.style.display = 'block';
-      startEnergyRegeneration();
-    }, 3000); // Загрузка длится 3 секунды
+            // Когда видео загрузилось, начинаем прогресс
+            loadingVideo.oncanplay = () => {
+                loadingInterval;
+            };
 
-    // Функция регенерации энергии
-    function startEnergyRegeneration() {
-      energyRegenInterval = setInterval(() => {
-        if (energy < maxEnergy) {
-          energy++;
-          updateEnergyBar();
-        }
-      }, 1000); // Регенерация 1 энергия в секунду
-    }
+            // Массив фраз для текста
+            const phrases = [
+                'Выгуливаем дракона!',
+                'Чистим ему зубы!',
+                'Собираем яйца!',
+                'Тапаем на дракона!',
+                'Вход!'
+            ];
 
-    // Обновление отображения шкалы энергии
-    function updateEnergyBar() {
-      energyBar.style.width = `${(energy / maxEnergy) * 100}%`;
-    }
+            let phraseIndex = 0;
 
-    // Логика кликов по дракону
-    dragon.addEventListener('click', (event) => {
-      if (energy > 0) {
-        score++;
-        energy--;
-        updateEnergyBar();
-        scoreElement.textContent = `Очки: ${score}`;
-        showTapEffect(event.clientX, event.clientY);
+            // Функция для смены текста каждую секунду
+            setInterval(() => {
+                loadingText.querySelector('p').textContent = phrases[phraseIndex];
+                phraseIndex = (phraseIndex + 1) % phrases.length; // Цикличность смены фраз
+            }, 1000); // Каждую секунду
 
-        // Добавляем эффект свечения
-        dragon.classList.add('active');
-        setTimeout(() => {
-          dragon.classList.remove('active');
-        }, 300); // Убираем эффект через 300мс
-      }
-    });
-
-    // Функция показа эффекта тапа
-    function showTapEffect(x, y) {
-      const effect = document.createElement('div');
-      effect.className = 'tap-effect';
-      effect.textContent = '+1';
-      effect.style.left = `${x}px`;
-      effect.style.top = `${y}px`;
-      document.body.appendChild(effect);
-
-      // Удаление эффекта после завершения анимации
-      effect.addEventListener('animationend', () => {
-        effect.remove();
-      });
-    }
-
-    // Отключение контекстного меню
-    document.addEventListener('contextmenu', (event) => event.preventDefault());
-  </script>
+            // Реакция на клик по кнопке
+            tapButton.addEventListener('click', () => {
+                alert('Вы тапнули на дракона!');
+            });
+        });
+    </script>
 </body>
 </html>
