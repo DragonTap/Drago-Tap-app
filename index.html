@@ -10,6 +10,7 @@
       font-family: Arial, sans-serif;
       overflow: hidden;
       user-select: none; /* Отключение выделения текста */
+      -webkit-tap-highlight-color: transparent; /* Убирает выделение при тапе */
     }
     #loadingScreen {
       display: flex;
@@ -45,7 +46,7 @@
       width: 0;
       height: 100%;
       background-color: #FF4500;
-      animation: fillBar 3s linear forwards;
+      animation: fillBar 3s linear forwards; /* Анимация заполнения */
     }
     #loadingScreen p {
       margin-top: 20px;
@@ -60,6 +61,14 @@
       }
       50% {
         transform: translateY(-10px);
+      }
+    }
+    @keyframes fillBar {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
       }
     }
     #game {
@@ -93,6 +102,7 @@
       cursor: pointer;
       user-select: none; /* Отключение выделения изображения */
       pointer-events: auto; /* Оставляем кликабельность */
+      -webkit-user-drag: none; /* Убирает перетаскивание */
     }
     #score {
       position: absolute;
