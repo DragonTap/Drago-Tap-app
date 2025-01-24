@@ -100,10 +100,25 @@
             border-radius: 5px;
             text-align: center;
             box-shadow: 0 0 10px #ff0000;
+            margin-top: 30px; /* Смещаем кнопку ниже */
+            animation: pulse 1.5s infinite; /* Добавляем анимацию пульса */
         }
 
         #enter-game-btn:hover {
             background-color: #cc0000;
+        }
+
+        /* Анимация пульса */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Стиль игры (тапалки) */
@@ -117,14 +132,19 @@
             align-items: center;
         }
 
-        @media (max-width: 600px) {
-            #loading-text, #loading-progress, #loading-facts {
-                font-size: 1.5rem;
+        /* Адаптивные стили для мобильных устройств */
+        @media (max-width: 1200px) {
+            #loading-text {
+                font-size: 1.8rem;
             }
 
             #loading-video {
-                width: 100%;
-                max-width: 400px;
+                width: 70%;
+                max-width: 450px;
+            }
+
+            #loading-progress {
+                font-size: 1.2rem;
             }
 
             #loading-facts {
@@ -132,20 +152,87 @@
             }
 
             #dragon-image {
+                width: 50%;
+                max-width: 350px;
+            }
+
+            #enter-game-btn {
+                font-size: 1.3rem;
+                padding: 8px 15px;
+            }
+
+            #completed-text {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #loading-text {
+                font-size: 1.6rem;
+            }
+
+            #loading-video {
                 width: 80%;
+                max-width: 400px;
+            }
+
+            #loading-progress {
+                font-size: 1rem;
+            }
+
+            #loading-facts {
+                font-size: 0.9rem;
+            }
+
+            #dragon-image {
+                width: 60%;
                 max-width: 300px;
             }
 
             #enter-game-btn {
                 font-size: 1.2rem;
+                padding: 8px 14px;
             }
 
             #completed-text {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 480px) {
+            #loading-text {
+                font-size: 1.4rem;
+            }
+
+            #loading-video {
+                width: 90%;
+                max-width: 350px;
+            }
+
+            #loading-progress {
+                font-size: 0.9rem;
+            }
+
+            #loading-facts {
+                font-size: 0.8rem;
+            }
+
+            #dragon-image {
+                width: 70%;
+                max-width: 250px;
+            }
+
+            #enter-game-btn {
+                font-size: 1.1rem;
+                padding: 7px 12px;
+            }
+
+            #completed-text {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 320px) {
             #loading-text {
                 font-size: 1.2rem;
             }
@@ -159,13 +246,18 @@
                 font-size: 0.8rem;
             }
 
+            #loading-facts {
+                font-size: 0.7rem;
+            }
+
             #dragon-image {
-                width: 90%;
-                max-width: 250px;
+                width: 80%;
+                max-width: 200px;
             }
 
             #enter-game-btn {
                 font-size: 1rem;
+                padding: 6px 10px;
             }
 
             #completed-text {
