@@ -46,7 +46,7 @@
       width: 0;
       height: 100%;
       background-color: #FF4500;
-      animation: fillBar 3s linear forwards; /* Анимация заполнения */
+      animation: fillBar 3s linear forwards;
     }
     #loadingScreen p {
       margin-top: 20px;
@@ -103,6 +103,10 @@
       user-select: none; /* Отключение выделения изображения */
       pointer-events: auto; /* Оставляем кликабельность */
       -webkit-user-drag: none; /* Убирает перетаскивание */
+      transition: box-shadow 0.3s ease-in-out; /* Плавный переход для свечения */
+    }
+    #dragon.active {
+      box-shadow: 0 0 20px red, 0 0 40px red, 0 0 60px red; /* Эффект свечения */
     }
     #score {
       position: absolute;
@@ -229,6 +233,12 @@
         updateEnergyBar();
         scoreElement.textContent = `Очки: ${score}`;
         showTapEffect(event.clientX, event.clientY);
+
+        // Добавляем эффект свечения
+        dragon.classList.add('active');
+        setTimeout(() => {
+          dragon.classList.remove('active');
+        }, 300); // Убираем эффект через 300мс
       }
     });
 
