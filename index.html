@@ -69,8 +69,8 @@
             100% { transform: translateY(0); }
         }
 
-        /* Страница с локальным фото дракона */
-        #completed-screen {
+        /* Страница с черным фоном после входа в игру */
+        #game-screen {
             width: 100%;
             height: 100%;
             background-color: black;
@@ -82,73 +82,123 @@
             text-align: center;
         }
 
-        #dragon-image {
+        #game-image {
             width: 60%;
             max-width: 400px;
             margin-bottom: 20px;
-            pointer-events: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            pointer-events: none; /* Запрещаем перетаскивание */
+        }
+
+        #game-image:active {
+            transform: scale(0.95);
+        }
+
+        #game-text {
+            font-size: 2rem;
+            color: yellow;
+        }
+
+        /* Экран после завершения загрузки */
+        #completed-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #completed-screen img {
+            width: 60%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            pointer-events: none; /* Запрещаем перетаскивание */
         }
 
         #completed-text {
             font-size: 2rem;
-            color: yellow;
-            animation: floatText 2s infinite;
+            margin-bottom: 20px;
         }
 
+        /* Кнопка ВХОД */
         #enter-game-btn {
             padding: 10px 20px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             background-color: #ff0000;
             color: white;
-            border: none;
+            border: 2px solid transparent;
+            border-radius: 10px;
             cursor: pointer;
-            border-radius: 5px;
-            text-align: center;
-            box-shadow: 0 0 10px #ff0000;
-            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
             animation: pulse 1.5s infinite;
         }
 
         #enter-game-btn:hover {
             background-color: #cc0000;
+            transform: scale(1.1);
+            border-color: #8a2be2; /* Фиолетовая обводка при наведении */
         }
 
+        #enter-game-btn:active {
+            transform: scale(1);
+        }
+
+        /* Анимация пульсации */
         @keyframes pulse {
             0% {
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.1);
+                transform: scale(1.05);
             }
             100% {
                 transform: scale(1);
             }
         }
 
-        /* Стиль игры (тапалки) */
-        #game-screen {
-            width: 100%;
-            height: 100%;
-            background-color: #121212;
+        /* Кнопка Помочь */
+        #help-btn {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            background-color: #8a2be2; /* Фиолетовый цвет */
             color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #clickable-dragon {
-            width: 60%;
-            max-width: 400px;
+            border: 2px solid #8a2be2;
+            border-radius: 25px;
             cursor: pointer;
-        }
-
-        #click-count {
-            font-size: 2rem;
             margin-top: 20px;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        /* Адаптивные стили для мобильных устройств */
+        #help-btn:hover {
+            background-color: #7a1db6; /* Тёмный фиолетовый при наведении */
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+        }
+
+        #help-btn:active {
+            transform: scale(1);
+        }
+
+        /* Запрещаем выделение текста и изображения */
+        img, button, p {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;  /* Запрещаем перетаскивание изображений */
+            -moz-user-drag: none;
+            -ms-user-drag: none;
+            user-drag: none;
+        }
+
+        /* Стилевое оформление для мобильных устройств */
         @media (max-width: 1200px) {
             #loading-text {
                 font-size: 1.8rem;
@@ -167,18 +217,17 @@
                 font-size: 1rem;
             }
 
-            #dragon-image {
+            #game-image {
                 width: 50%;
                 max-width: 350px;
             }
 
-            #enter-game-btn {
-                font-size: 1.3rem;
-                padding: 8px 15px;
+            #game-text {
+                font-size: 1.8rem;
             }
 
-            #completed-text {
-                font-size: 1.8rem;
+            #help-btn {
+                font-size: 1rem;
             }
         }
 
@@ -200,18 +249,17 @@
                 font-size: 0.9rem;
             }
 
-            #dragon-image {
+            #game-image {
                 width: 60%;
                 max-width: 300px;
             }
 
-            #enter-game-btn {
-                font-size: 1.2rem;
-                padding: 8px 14px;
+            #game-text {
+                font-size: 1.6rem;
             }
 
-            #completed-text {
-                font-size: 1.6rem;
+            #help-btn {
+                font-size: 1rem;
             }
         }
 
@@ -233,18 +281,17 @@
                 font-size: 0.8rem;
             }
 
-            #dragon-image {
+            #game-image {
                 width: 70%;
                 max-width: 250px;
             }
 
-            #enter-game-btn {
-                font-size: 1.1rem;
-                padding: 7px 12px;
+            #game-text {
+                font-size: 1.4rem;
             }
 
-            #completed-text {
-                font-size: 1.4rem;
+            #help-btn {
+                font-size: 1rem;
             }
         }
 
@@ -266,18 +313,17 @@
                 font-size: 0.7rem;
             }
 
-            #dragon-image {
+            #game-image {
                 width: 80%;
                 max-width: 200px;
             }
 
-            #enter-game-btn {
-                font-size: 1rem;
-                padding: 6px 10px;
+            #game-text {
+                font-size: 1.2rem;
             }
 
-            #completed-text {
-                font-size: 1.2rem;
+            #help-btn {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -290,11 +336,11 @@
             Ваш браузер не поддерживает видео.
         </video>
         <div id="loading-text">
-            <p>Зажигаем экран📱!</p>
-            <p id="loading-progress">0%</p>
+            <p>Выгуливаем дракона🏞️!</p>
         </div>
+        <div id="loading-progress">0%</div>
         <div id="loading-facts">
-            Знаете ли вы? Драконы часто описываются как хранители сокровищ!
+            <p>Драконы могут летать на высоте до 10 000 метров! 🐉</p>
         </div>
     </div>
 
@@ -302,65 +348,52 @@
     <div id="completed-screen" style="display: none;">
         <img id="dragon-image" src="drago.jpg" alt="Dragon Image">
         <p id="completed-text">Игра загружена!</p>
-        <button id="enter-game-btn">Войти в игру</button>
+        <button id="enter-game-btn">ВХОД</button>
     </div>
 
-    <!-- Игровой экран с кликами -->
+    <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
-        <h1></h1>
-        <p>Кликни на дракона!</p>
-        <img id="clickable-dragon" src="drago_coin.png" alt="Drago Image">
-        <p id="click-count">Клики: 0</p>
+        <img id="game-image" src="grustno.png" alt="Game Image">
+        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
+            Но вы можете нам помочь ускорить процес финансово.
+            Даже 1 Ton это большая ступень прогресса </p>
+        <button id="help-btn">Помочь</button>
     </div>
-
+    <script>
+        // Функция для открытия кошелька в Telegram
+        function openTelegramWallet() {
+            const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // замените на ваш адрес
+            const telegramLink = `https://t.me/ton_blockchain_wallet_bot?start=${walletAddress}`;
+            
+            // Открытие ссылки на Telegram-кошелек
+            window.open(telegramLink, '_blank');
+        }
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const completedScreen = document.getElementById('completed-screen');
-            const gameScreen = document.getElementById('game-screen');
             const loadingText = document.getElementById('loading-text');
             const loadingProgress = document.getElementById('loading-progress');
             const loadingFacts = document.getElementById('loading-facts');
-            const loadingVideo = document.getElementById('loading-video');
             const enterGameBtn = document.getElementById('enter-game-btn');
-            const completedText = document.getElementById('completed-text');
-            const clickableDragon = document.getElementById('clickable-dragon');
-            const clickCount = document.getElementById('click-count');
+            const gameScreen = document.getElementById('game-screen');
 
-            // Симуляция загрузки, длительностью 5 секунд
-            let progress = 0;
-            const loadingDuration = 5000; // 5 секунд
-            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
-            const increment = (100 / (loadingDuration / intervalTime));
-
-            const loadingInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += increment;
-                    loadingProgress.textContent = `${Math.floor(progress)}%`;
-                } else {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none';
-                    completedScreen.style.display = 'flex';
-                }
-            }, intervalTime);
-
-            // Смена подсказок
-            const phrases = [
+            // Тексты для смены
+            const loadingTexts = [
                 'Выгуливаем дракона🏞️!',
                 'Чистим ему зубы🦷!',
                 'Собираем яйца🥚!',
+                'Поджигаем огонь🔥!',
                 'ВХОД'
             ];
 
-            let phraseIndex = 0;
-
-            setInterval(() => {
-                loadingText.querySelector('p').textContent = phrases[phraseIndex];
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-            }, 1100);
-
-            // Массив случайных фактов о драконах
+            // Факты о драконах
             const dragonFacts = [
+                '🤔Драконы могут летать на высоте до 10 000 метров! 🐉',
+                '🤔Драконы едят только самые лучшие деликатесы. 🍽️',
+                '🤔Драконьи яйца невероятно ценны для алхимиков. 🥚',
+                '🤔Говорят, что драконы могут быть друзьями людей! 🤝',
                 '🤔Драконы способны летать и дышать огнём🔥',
                 '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
                 '🤔В мифах драконы часто охраняют сокровища💰',
@@ -375,25 +408,46 @@
                 '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
             ];
 
-            // Функция для получения случайного факта
-            const getRandomFact = () => {
-                const randomIndex = Math.floor(Math.random() * dragonFacts.length);
-                return dragonFacts[randomIndex];
+            let currentTextIndex = 0;
+            let progress = 0;
+            const loadingDuration = 4500; // 5 секунд
+            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
+            const increment = (100 / (loadingDuration / intervalTime));
+
+            // Выбор случайного факта при обновлении страницы
+            const randomFactIndex = Math.floor(Math.random() * dragonFacts.length); // Выбираем случайный факт
+            loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`; // Отображаем выбранный факт
+
+            const loadingInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += increment;
+                    loadingProgress.textContent = `${Math.floor(progress)}%`;
+                } else {
+                    clearInterval(loadingInterval);
+                    loadingScreen.style.display = 'none';
+                    completedScreen.style.display = 'flex';
+                }
+            }, intervalTime);
+
+            // Смена текста загрузки
+            const changeText = () => {
+                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
+                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
             };
 
-            // Вывод случайного факта при входе в игру
-            loadingFacts.textContent = getRandomFact();
+            // Смена текста каждые 1.25 секунды
+            setInterval(changeText, 1000);
 
-            // Обработчик кнопки для входа в игру
             enterGameBtn.addEventListener('click', () => {
-                completedScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                completedScreen.style.display = 'none';
             });
 
-            let clicks = 0;
-            clickableDragon.addEventListener('click', () => {
-                clicks++;
-                clickCount.textContent = `Клики: ${clicks}`;
+            // Анимация нажатия на изображение
+            const gameImage = document.getElementById('game-image');
+            gameImage.addEventListener('click', () => {
+                gameImage.classList.add('animate');
+                setTimeout(() => gameImage.classList.remove('animate'), 200); // Убираем анимацию через 200мс
             });
         });
     </script>
