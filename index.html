@@ -15,10 +15,10 @@
             height: 100%;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            user-select: none; /* Запрещаем выделение текста */
-            -webkit-user-select: none; /* Для Safari */
-            -moz-user-select: none; /* Для Firefox */
-            -ms-user-select: none; /* Для старых версий IE */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         /* Загрузочный экран */
@@ -59,7 +59,7 @@
         #loading-facts {
             margin-top: 20px;
             font-size: 1.2rem;
-            color: #ffff00; /* Изменено на жёлтый цвет */
+            color: #ffff00;
             text-align: center;
         }
 
@@ -86,12 +86,12 @@
             width: 60%;
             max-width: 400px;
             margin-bottom: 20px;
-            pointer-events: none; /* Запрещаем перетаскивание изображения */
+            pointer-events: none;
         }
 
         #completed-text {
             font-size: 2rem;
-            color: yellow; /* Желтый цвет */
+            color: yellow;
             animation: floatText 2s infinite;
         }
 
@@ -105,15 +105,14 @@
             border-radius: 5px;
             text-align: center;
             box-shadow: 0 0 10px #ff0000;
-            margin-top: 30px; /* Смещаем кнопку ниже */
-            animation: pulse 1.5s infinite; /* Добавляем анимацию пульса */
+            margin-top: 30px;
+            animation: pulse 1.5s infinite;
         }
 
         #enter-game-btn:hover {
             background-color: #cc0000;
         }
 
-        /* Анимация пульса */
         @keyframes pulse {
             0% {
                 transform: scale(1);
@@ -133,8 +132,20 @@
             background-color: #121212;
             color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+
+        #clickable-dragon {
+            width: 60%;
+            max-width: 400px;
+            cursor: pointer;
+        }
+
+        #click-count {
+            font-size: 2rem;
+            margin-top: 20px;
         }
 
         /* Адаптивные стили для мобильных устройств */
@@ -289,15 +300,17 @@
 
     <!-- Экран завершения загрузки и кнопка для входа в игру -->
     <div id="completed-screen" style="display: none;">
-        <img id="dragon-image" src="dragon.jpg" alt="Dragon Image">
+        <img id="dragon-image" src="drago.jpg" alt="Dragon Image">
         <p id="completed-text">Игра загружена!</p>
         <button id="enter-game-btn">Войти в игру</button>
     </div>
 
-    <!-- Игровой экран -->
+    <!-- Игровой экран с кликами -->
     <div id="game-screen" style="display: none;">
-        <h1>Добро пожаловать в Drago Tap!</h1>
-        <p>Здесь начнётся ваша игра.</p>
+        <h1></h1>
+        <p>Кликни на дракона!</p>
+        <img id="clickable-dragon" src="drago_coin.png" alt="Drago Image">
+        <p id="click-count">Клики: 0</p>
     </div>
 
     <script>
@@ -311,6 +324,8 @@
             const loadingVideo = document.getElementById('loading-video');
             const enterGameBtn = document.getElementById('enter-game-btn');
             const completedText = document.getElementById('completed-text');
+            const clickableDragon = document.getElementById('clickable-dragon');
+            const clickCount = document.getElementById('click-count');
 
             // Симуляция загрузки, длительностью 5 секунд
             let progress = 0;
@@ -342,7 +357,7 @@
             setInterval(() => {
                 loadingText.querySelector('p').textContent = phrases[phraseIndex];
                 phraseIndex = (phraseIndex + 1) % phrases.length;
-            }, 1100); // Каждую секунду смена текста
+            }, 1100);
 
             // Массив случайных фактов о драконах
             const dragonFacts = [
@@ -357,8 +372,7 @@
                 '🤔Известно, что дождь может притушить пламя дракона🌧️',
                 '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
                 '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла⛩️',
-                '🤔Драконы часто изображаются в виде крылатых ящеров с длинным хвостом, острыми зубами и шипами на спине🦠',
-                '🤔В современной культуре драконы часто используются в фэнтези и видеоиграх как символ силы и могущества🎮',
+                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
             ];
 
             // Функция для получения случайного факта
@@ -374,6 +388,12 @@
             enterGameBtn.addEventListener('click', () => {
                 completedScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+            });
+
+            let clicks = 0;
+            clickableDragon.addEventListener('click', () => {
+                clicks++;
+                clickCount.textContent = `Клики: ${clicks}`;
             });
         });
     </script>
