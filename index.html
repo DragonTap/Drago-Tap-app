@@ -354,7 +354,7 @@
     <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
         <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
+        <p id="game-text">Наша игра еще не доработана, мы стараемся изо всех сил.
             Но вы можете нам помочь ускорить процес финансово.
             Даже 1 Ton это большая ступень прогресса </p>
         <button id="help-btn">Помочь</button>
@@ -363,7 +363,7 @@
         // Функция для открытия кошелька в Telegram
         function openTelegramWallet() {
             const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // замените на ваш адрес
-            const telegramLink = `https://t.me/ton_blockchain_wallet_bot?start=${walletAddress}`;
+            const telegramLink = `https://t.me/wallet=${walletAddress}`;
             
             // Открытие ссылки на Telegram-кошелек
             window.open(telegramLink, '_blank');
