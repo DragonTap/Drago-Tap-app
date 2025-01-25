@@ -198,133 +198,49 @@
             user-drag: none;
         }
 
-        /* Стилевое оформление для мобильных устройств */
-        @media (max-width: 1200px) {
-            #loading-text {
-                font-size: 1.8rem;
-            }
-
-            #loading-video {
-                width: 70%;
-                max-width: 450px;
-            }
-
-            #loading-progress {
-                font-size: 1.2rem;
-            }
-
-            #loading-facts {
-                font-size: 1rem;
-            }
-
-            #game-image {
-                width: 50%;
-                max-width: 350px;
-            }
-
-            #game-text {
-                font-size: 1.8rem;
-            }
-
-            #help-btn {
-                font-size: 1rem;
-            }
+        /* Модальное окно для ввода суммы */
+        #donate-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        @media (max-width: 768px) {
-            #loading-text {
-                font-size: 1.6rem;
-            }
-
-            #loading-video {
-                width: 80%;
-                max-width: 400px;
-            }
-
-            #loading-progress {
-                font-size: 1rem;
-            }
-
-            #loading-facts {
-                font-size: 0.9rem;
-            }
-
-            #game-image {
-                width: 60%;
-                max-width: 300px;
-            }
-
-            #game-text {
-                font-size: 1.6rem;
-            }
-
-            #help-btn {
-                font-size: 1rem;
-            }
+        #donate-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 80%;
         }
 
-        @media (max-width: 480px) {
-            #loading-text {
-                font-size: 1.4rem;
-            }
-
-            #loading-video {
-                width: 90%;
-                max-width: 350px;
-            }
-
-            #loading-progress {
-                font-size: 0.9rem;
-            }
-
-            #loading-facts {
-                font-size: 0.8rem;
-            }
-
-            #game-image {
-                width: 70%;
-                max-width: 250px;
-            }
-
-            #game-text {
-                font-size: 1.4rem;
-            }
-
-            #help-btn {
-                font-size: 1rem;
-            }
+        #donate-modal input {
+            font-size: 1.2rem;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        @media (max-width: 320px) {
-            #loading-text {
-                font-size: 1.2rem;
-            }
+        #donate-modal button {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-            #loading-video {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            #loading-progress {
-                font-size: 0.8rem;
-            }
-
-            #loading-facts {
-                font-size: 0.7rem;
-            }
-
-            #game-image {
-                width: 80%;
-                max-width: 200px;
-            }
-
-            #game-text {
-                font-size: 1.2rem;
-            }
-
-            #help-btn {
-                font-size: 0.9rem;
-            }
+        #donate-modal button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -354,10 +270,19 @@
     <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
         <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, мы стараемся изо всех сил.
+        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
             Но вы можете нам помочь ускорить процес финансово.
             Даже 1 Ton это большая ступень прогресса </p>
-        <button id="help-btn" onclick="window.open('tg://resolve?domain=@DragoTap&text=UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs', '_blank')">Помочь</button>
+        <button id="help-btn">Помочь</button>
+    </div>
+
+    <!-- Модальное окно для ввода суммы -->
+    <div id="donate-modal">
+        <div id="donate-modal-content">
+            <h2>Введите сумму для перевода (TON)</h2>
+            <input type="number" id="donation-amount" placeholder="Сумма TON" min="0.1">
+            <button id="donate-btn">Отправить</button>
+        </div>
     </div>
 
     <script>
@@ -369,6 +294,10 @@
             const loadingFacts = document.getElementById('loading-facts');
             const enterGameBtn = document.getElementById('enter-game-btn');
             const gameScreen = document.getElementById('game-screen');
+            const helpBtn = document.getElementById('help-btn');
+            const donateModal = document.getElementById('donate-modal');
+            const donateBtn = document.getElementById('donate-btn');
+            const donationAmount = document.getElementById('donation-amount');
 
             // Тексты для смены
             const loadingTexts = [
@@ -385,18 +314,7 @@
                 '🤔Драконы едят только самые лучшие деликатесы. 🍽️',
                 '🤔Драконьи яйца невероятно ценны для алхимиков. 🥚',
                 '🤔Говорят, что драконы могут быть друзьями людей! 🤝',
-                '🤔Драконы способны летать и дышать огнём🔥',
-                '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
-                '🤔В мифах драконы часто охраняют сокровища💰',
-                '🤔Древние драконы могут быть настолько большими, что их можно сравнить с целыми горными цепями⛰️',
-                '🤔Считается, что драконы бессмертны и могут жить тысячи лет😱',
-                '🤔Драконы являются одними из самых популярных и устойчивых мифологических существ в мире🐉',
-                '🤔Некоторые драконы могут говорить или дышать огнем, другие не могут🤫',
-                '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
-                '🤔Известно, что дождь может притушить пламя дракона🌧️',
-                '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
-                '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла⛩️',
-                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
+                '🤔Драконы способны летать и дышать огнём🔥'
             ];
 
             let currentTextIndex = 0;
@@ -410,19 +328,44 @@
             loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`; // Отображаем выбранный факт
 
             const loadingInterval = setInterval(() => {
-                progress += increment;
-                loadingProgress.textContent = `${Math.floor(progress)}%`;
-
-                if (progress >= 100) {
+                if (progress < 100) {
+                    progress += increment;
+                    loadingProgress.textContent = `${Math.floor(progress)}%`;
+                } else {
                     clearInterval(loadingInterval);
                     loadingScreen.style.display = 'none';
                     completedScreen.style.display = 'flex';
                 }
             }, intervalTime);
 
+            // Смена текста загрузки
+            const changeText = () => {
+                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
+                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
+            };
+
+            // Смена текста каждые 1.25 секунды
+            setInterval(changeText, 1000);
+
             enterGameBtn.addEventListener('click', () => {
-                completedScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                completedScreen.style.display = 'none';
+            });
+
+            helpBtn.addEventListener('click', () => {
+                donateModal.style.display = 'flex';
+            });
+
+            donateBtn.addEventListener('click', () => {
+                const amount = donationAmount.value;
+                if (amount && amount > 0) {
+                    const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес
+                    const telegramLink = `https://ton.org/send/${walletAddress}?amount=${amount}`;
+                    window.open(telegramLink, '_blank');
+                    donateModal.style.display = 'none';
+                } else {
+                    alert('Пожалуйста, введите сумму для перевода.');
+                }
             });
         });
     </script>
