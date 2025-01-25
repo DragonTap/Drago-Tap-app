@@ -16,9 +16,6 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         /* Загрузочный экран */
@@ -44,7 +41,7 @@
         #loading-text {
             font-size: 2rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+            text-shadow: 0 0 10px #ff0000;
             animation: floatText 2s infinite;
             text-align: center;
         }
@@ -52,7 +49,6 @@
         #loading-progress {
             font-size: 1.5rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
             margin-top: 10px;
         }
 
@@ -69,38 +65,7 @@
             100% { transform: translateY(0); }
         }
 
-        /* Страница с черным фоном после входа в игру */
-        #game-screen {
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-        }
-
-        #game-image {
-            width: 60%;
-            max-width: 400px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            pointer-events: none; /* Запрещаем перетаскивание */
-        }
-
-        #game-image:active {
-            transform: scale(0.95);
-        }
-
-        #game-text {
-            font-size: 2rem;
-            color: yellow;
-        }
-
-        /* Экран после завершения загрузки */
+        /* Экран завершения загрузки */
         #completed-screen {
             display: none;
             width: 100%;
@@ -118,7 +83,6 @@
             width: 60%;
             max-width: 400px;
             margin-bottom: 20px;
-            pointer-events: none; /* Запрещаем перетаскивание */
         }
 
         #completed-text {
@@ -136,37 +100,54 @@
             border-radius: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
-            animation: pulse 1.5s infinite;
         }
 
         #enter-game-btn:hover {
             background-color: #cc0000;
             transform: scale(1.1);
-            border-color: #8a2be2; /* Фиолетовая обводка при наведении */
         }
 
         #enter-game-btn:active {
             transform: scale(1);
         }
 
-        /* Анимация пульсации */
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
+        /* Страница игры */
+        #game-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        #game-image {
+            width: 60%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            pointer-events: none;
+        }
+
+        #game-image:active {
+            transform: scale(0.95);
+        }
+
+        #game-text {
+            font-size: 1.8rem;
+            color: yellow;
         }
 
         /* Кнопка Помочь */
         #help-btn {
             padding: 12px 25px;
             font-size: 1.2rem;
-            background-color: #8a2be2; /* Фиолетовый цвет */
+            background-color: #8a2be2;
             color: white;
             border: 2px solid #8a2be2;
             border-radius: 25px;
@@ -177,70 +158,13 @@
         }
 
         #help-btn:hover {
-            background-color: #7a1db6; /* Тёмный фиолетовый при наведении */
+            background-color: #7a1db6;
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
         }
 
         #help-btn:active {
             transform: scale(1);
-        }
-
-        /* Запрещаем выделение текста и изображения */
-        img, button, p {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-user-drag: none;  /* Запрещаем перетаскивание изображений */
-            -moz-user-drag: none;
-            -ms-user-drag: none;
-            user-drag: none;
-        }
-
-        /* Модальное окно для ввода суммы */
-        #donate-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        #donate-modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 400px;
-            width: 80%;
-        }
-
-        #donate-modal input {
-            font-size: 1.2rem;
-            padding: 10px;
-            width: 100%;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #donate-modal button {
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #donate-modal button:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
@@ -270,82 +194,31 @@
     <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
         <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
-            Но вы можете нам помочь ускорить процес финансово.
-            Даже 1 Ton это большая ступень прогресса </p>
+        <p id="game-text">Наша игра еще не доработана, но вы можете нам помочь ускорить процесс финансово.</p>
         <button id="help-btn">Помочь</button>
-    </div>
-
-    <!-- Модальное окно для ввода суммы -->
-    <div id="donate-modal">
-        <div id="donate-modal-content">
-            <h2>Введите сумму для перевода (TON)</h2>
-            <input type="number" id="donation-amount" placeholder="Сумма TON" min="0.1">
-            <button id="donate-btn">Отправить</button>
-        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const completedScreen = document.getElementById('completed-screen');
-            const loadingText = document.getElementById('loading-text');
             const loadingProgress = document.getElementById('loading-progress');
-            const loadingFacts = document.getElementById('loading-facts');
             const enterGameBtn = document.getElementById('enter-game-btn');
             const gameScreen = document.getElementById('game-screen');
             const helpBtn = document.getElementById('help-btn');
-            const donateModal = document.getElementById('donate-modal');
-            const donateBtn = document.getElementById('donate-btn');
-            const donationAmount = document.getElementById('donation-amount');
 
-            // Тексты для смены
-            const loadingTexts = [
-                'Выгуливаем дракона🏞️!',
-                'Чистим ему зубы🦷!',
-                'Собираем яйца🥚!',
-                'Поджигаем огонь🔥!',
-                'ВХОД'
-            ];
-
-            // Факты о драконах
-            const dragonFacts = [
-                '🤔Драконы могут летать на высоте до 10 000 метров! 🐉',
-                '🤔Драконы едят только самые лучшие деликатесы. 🍽️',
-                '🤔Драконьи яйца невероятно ценны для алхимиков. 🥚',
-                '🤔Говорят, что драконы могут быть друзьями людей! 🤝',
-                '🤔Драконы способны летать и дышать огнём🔥'
-            ];
-
-            let currentTextIndex = 0;
             let progress = 0;
-            const loadingDuration = 4500; // 5 секунд
-            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
-            const increment = (100 / (loadingDuration / intervalTime));
-
-            // Выбор случайного факта при обновлении страницы
-            const randomFactIndex = Math.floor(Math.random() * dragonFacts.length); // Выбираем случайный факт
-            loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`; // Отображаем выбранный факт
-
-            const loadingInterval = setInterval(() => {
+            const increment = 2;
+            const interval = setInterval(() => {
                 if (progress < 100) {
                     progress += increment;
-                    loadingProgress.textContent = `${Math.floor(progress)}%`;
+                    loadingProgress.textContent = `${progress}%`;
                 } else {
-                    clearInterval(loadingInterval);
+                    clearInterval(interval);
                     loadingScreen.style.display = 'none';
                     completedScreen.style.display = 'flex';
                 }
-            }, intervalTime);
-
-            // Смена текста загрузки
-            const changeText = () => {
-                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
-                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
-            };
-
-            // Смена текста каждые 1.25 секунды
-            setInterval(changeText, 1000);
+            }, 100);
 
             enterGameBtn.addEventListener('click', () => {
                 gameScreen.style.display = 'flex';
@@ -353,19 +226,7 @@
             });
 
             helpBtn.addEventListener('click', () => {
-                donateModal.style.display = 'flex';
-            });
-
-            donateBtn.addEventListener('click', () => {
-                const amount = donationAmount.value;
-                if (amount && amount > 0) {
-                    const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес
-                    const telegramLink = `https://ton.org/send/${walletAddress}?amount=${amount}`;
-                    window.open(telegramLink, '_blank');
-                    donateModal.style.display = 'none';
-                } else {
-                    alert('Пожалуйста, введите сумму для перевода.');
-                }
+                window.open('https://t.me/Wallet?start=UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs', '_blank');
             });
         });
     </script>
