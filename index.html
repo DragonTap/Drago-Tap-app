@@ -354,11 +354,10 @@
     <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
         <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
+        <p id="game-text">Наша игра еще не доработана, мы стараемся изо всех сил.
             Но вы можете нам помочь ускорить процес финансово.
             Даже 1 Ton это большая ступень прогресса </p>
-            <a id="help-btn" href="ton://transfer?to=<UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs>&amount=0.1&text=Спасибо за вклад в развитие Drago Tap" target="_blank">Помочь</a>
-
+        <button id="help-btn" onclick="window.open('tg://resolve?domain=@DragoTap&text=UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs', '_blank')">Помочь</button>
     </div>
 
     <script>
@@ -411,35 +410,19 @@
             loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`; // Отображаем выбранный факт
 
             const loadingInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += increment;
-                    loadingProgress.textContent = `${Math.floor(progress)}%`;
-                } else {
+                progress += increment;
+                loadingProgress.textContent = `${Math.floor(progress)}%`;
+
+                if (progress >= 100) {
                     clearInterval(loadingInterval);
                     loadingScreen.style.display = 'none';
                     completedScreen.style.display = 'flex';
                 }
             }, intervalTime);
 
-            // Смена текста загрузки
-            const changeText = () => {
-                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
-                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
-            };
-
-            // Смена текста каждые 1.25 секунды
-            setInterval(changeText, 1000);
-
             enterGameBtn.addEventListener('click', () => {
-                gameScreen.style.display = 'flex';
                 completedScreen.style.display = 'none';
-            });
-
-            // Анимация нажатия на изображение
-            const gameImage = document.getElementById('game-image');
-            gameImage.addEventListener('click', () => {
-                gameImage.classList.add('animate');
-                setTimeout(() => gameImage.classList.remove('animate'), 200); // Убираем анимацию через 200мс
+                gameScreen.style.display = 'flex';
             });
         });
     </script>
