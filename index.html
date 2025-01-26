@@ -175,18 +175,6 @@
             background-color: #cc0000;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
         /* Адаптивность */
         @media (max-width: 768px) {
             #loading-text {
@@ -223,6 +211,29 @@
                 width: 80%;
             }
         }
+
+        #wallet-address {
+            font-size: 1.5rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        #copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 0 10px #ff0000;
+        }
+
+        #copy-btn:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -255,7 +266,11 @@
             Но вы можете нам помочь ускорить процес финансово.
             Даже 1 Ton это большая ступень прогресса
             Наш Ton-Адрес(просто нажмите для копирования) 
-            UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs</p>
+            <p id="wallet-address">
+                <span id="copy-text">UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs</span>
+                <button id="copy-btn">Копировать</button>
+            </p>
+        </p>
         <button id="help-btn">Помочь</button>
     </div>
 
@@ -271,7 +286,9 @@
             const enterGameBtn = document.getElementById('enter-game-btn');
             const completedText = document.getElementById('completed-text');
             const helpBtn = document.getElementById('help-btn');
-            
+            const copyBtn = document.getElementById('copy-btn');
+            const copyText = document.getElementById('copy-text');
+
             // Симуляция загрузки, длительностью 5 секунд
             let progress = 0;
             const loadingDuration = 5000; // 5 секунд
@@ -316,32 +333,34 @@
                 '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
                 '🤔Известно, что дождь может притушить пламя дракона🌧️',
                 '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
-                '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла⛩️',
-                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
+                '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла🙏'
             ];
 
-            // Функция для получения случайного факта
-            const getRandomFact = () => {
-                const randomIndex = Math.floor(Math.random() * dragonFacts.length);
-                return dragonFacts[randomIndex];
-            };
+            // Вывод случайного факта
+            setInterval(() => {
+                const randomFact = dragonFacts[Math.floor(Math.random() * dragonFacts.length)];
+                loadingFacts.textContent = randomFact;
+            }, 5000);
 
-            // Вывод случайного факта при входе в игру
-            loadingFacts.textContent = getRandomFact();
-
-            // Обработчик кнопки для входа в игру
+            // Переход в игру по кнопке
             enterGameBtn.addEventListener('click', () => {
                 completedScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
             });
 
-            helpBtn.addEventListener('click', () => {
-                const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес кошелька
-                const amount = 1; // Сумма для перевода
+            // Функция копирования текста
+            copyBtn.addEventListener('click', () => {
+                const textToCopy = copyText.textContent;
 
-                // Ссылка для отправки 1 TON через Telegram Wallet
-                const telegramLink = `https://t.me/wallet?start=transfer_${walletAddress}_${amount}`;
-                window.open(telegramLink, '_blank');
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('Текст скопирован!');
+                }).catch((err) => {
+                    alert('Ошибка при копировании: ' + err);
+                });
+            });
+
+            helpBtn.addEventListener('click', () => {
+                alert('Спасибо за поддержку!');
             });
         });
     </script>
