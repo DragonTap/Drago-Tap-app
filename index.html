@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drago Tap</title>
+    <script src="https://unpkg.com/@tonconnect/sdk@2.0.1/dist/tonconnect-sdk.umd.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,332 +17,115 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
-        /* Загрузочный экран */
-        #loading-screen {
-            position: absolute;
+        #loading-screen, #completed-screen, #game-screen {
             width: 100%;
             height: 100%;
-            background-color: black;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
+            text-align: center;
+            background-color: black;
         }
 
-        #loading-video {
-            width: 80%;
-            max-width: 500px;
-            height: auto;
-            margin-bottom: 20px;
+        #loading-screen {
+            position: absolute;
         }
 
         #loading-text {
             font-size: 2rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
             animation: floatText 2s infinite;
-            text-align: center;
         }
 
-        #loading-progress {
-            font-size: 1.5rem;
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+        #loading-progress, #loading-facts {
+            font-size: 1.2rem;
+            color: #ffff00;
             margin-top: 10px;
         }
 
-        #loading-facts {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: #ffff00;
-            text-align: center;
-        }
-
         @keyframes floatText {
-            0% { transform: translateY(0); }
+            0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-
-        /* Страница с черным фоном после входа в игру */
-        #game-screen {
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-        }
-
-        #game-image {
-            width: 60%;
-            max-width: 400px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            pointer-events: none; /* Запрещаем перетаскивание */
-        }
-
-        #game-image:active {
-            transform: scale(0.95);
-        }
-
-        #game-text {
-            font-size: 2rem;
-            color: yellow;
-        }
-
-        /* Экран после завершения загрузки */
-        #completed-screen {
-            display: none;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        #completed-screen img {
-            width: 60%;
-            max-width: 400px;
-            margin-bottom: 20px;
-            pointer-events: none; /* Запрещаем перетаскивание */
         }
 
         #completed-text {
             font-size: 2rem;
-            margin-bottom: 20px;
+            color: yellow;
         }
 
-        /* Кнопка ВХОД */
-        #enter-game-btn {
+        #enter-game-btn, #help-btn {
             padding: 10px 20px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             background-color: #ff0000;
             color: white;
-            border: 2px solid transparent;
-            border-radius: 10px;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 0 10px #ff0000;
+            margin-top: 30px;
             animation: pulse 1.5s infinite;
         }
 
-        #enter-game-btn:hover {
+        #enter-game-btn:hover, #help-btn:hover {
             background-color: #cc0000;
-            transform: scale(1.1);
-            border-color: #8a2be2; /* Фиолетовая обводка при наведении */
         }
 
-        #enter-game-btn:active {
-            transform: scale(1);
-        }
-
-        /* Анимация пульсации */
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
+
         @media (max-width: 768px) {
-            #loading-text {
-                font-size: 1.6rem;
-            }
-
-            #loading-video {
-                width: 80%;
-                max-width: 400px;
-            }
-
-            #loading-progress {
-                font-size: 1rem;
-            }
-
-            #loading-facts {
-                font-size: 0.9rem;
-            }
-
-            #game-image {
-                width: 60%;
-                max-width: 300px;
-            }
-
-            #game-text {
-                font-size: 1.6rem;
-            }
-
-            #help-btn {
-                font-size: 1rem;
-            }
+            #loading-text { font-size: 1.5rem; }
+            #completed-text, #enter-game-btn, #help-btn { font-size: 1.2rem; }
         }
 
         @media (max-width: 480px) {
-            #loading-text {
-                font-size: 1.4rem;
-            }
-
-            #loading-video {
-                width: 90%;
-                max-width: 350px;
-            }
-
-            #loading-progress {
-                font-size: 0.9rem;
-            }
-
-            #loading-facts {
-                font-size: 0.8rem;
-            }
-
-            #game-image {
-                width: 70%;
-                max-width: 250px;
-            }
-
-            #game-text {
-                font-size: 1.4rem;
-            }
-
-            #help-btn {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 320px) {
-            #loading-text {
-                font-size: 1.2rem;
-            }
-
-            #loading-video {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            #loading-progress {
-                font-size: 0.8rem;
-            }
-
-            #loading-facts {
-                font-size: 0.7rem;
-            }
-
-            #game-image {
-                width: 80%;
-                max-width: 200px;
-            }
-
-            #game-text {
-                font-size: 1.2rem;
-            }
-
-            #help-btn {
-                font-size: 0.9rem;
-            }
+            #loading-text { font-size: 1.2rem; }
+            #completed-text, #enter-game-btn, #help-btn { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
     <!-- Загрузочный экран -->
     <div id="loading-screen">
-        <video id="loading-video" autoplay muted loop playsinline>
-            <source src="drago_zagruska.mp4" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-        </video>
-        <div id="loading-text">
-            <p>Выгуливаем дракона🏞️!</p>
-        </div>
+        <div id="loading-text">Загрузка...</div>
         <div id="loading-progress">0%</div>
-        <div id="loading-facts">
-            <p>Драконы могут летать на высоте до 10 000 метров! 🐉</p>
-        </div>
-    </div>
-    <!-- Экран завершения загрузки и кнопка для входа в игру -->
-    <div id="completed-screen" style="display: none;">
-        <img id="dragon-image" src="drago.jpg" alt="Dragon Image">
-        <p id="completed-text">Игра загружена!</p>
-        <button id="enter-game-btn">ВХОД</button>
+        <div id="loading-facts">Знаете ли вы? Драконы часто описываются как хранители сокровищ!</div>
     </div>
 
-    <!-- Страница игры -->
+    <!-- Экран завершения загрузки -->
+    <div id="completed-screen" style="display: none;">
+        <div id="completed-text">Игра загружена!</div>
+        <button id="enter-game-btn">Войти в игру</button>
+    </div>
+
+    <!-- Игровой экран -->
     <div id="game-screen" style="display: none;">
-        <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
-            Но вы можете нам помочь ускорить процесс финансово.
-            Даже 1 Ton — это большая ступень прогресса.</p>
-        <button id="help-btn" onclick="openTelegramWallet()">Помочь</button>
+        <img id="grustno-image" src="grustno.png" alt="Grustno Image" style="width: 60%; max-width: 400px; margin-bottom: 20px;">
+        <p>Подключите свой Ton Space кошелек для помощи проекту!</p>
+        <button id="help-btn">Подключить кошелек</button>
     </div>
 
     <script>
-        function openTelegramWallet() {
-            const walletAddress = "https://t.me/ton_walet?start=PAYMENT_LINK";
-            window.open(walletAddress, "_blank");
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const completedScreen = document.getElementById('completed-screen');
-            const loadingText = document.getElementById('loading-text');
-            const loadingProgress = document.getElementById('loading-progress');
-            const loadingFacts = document.getElementById('loading-facts');
-            const enterGameBtn = document.getElementById('enter-game-btn');
             const gameScreen = document.getElementById('game-screen');
+            const loadingProgress = document.getElementById('loading-progress');
+            const enterGameBtn = document.getElementById('enter-game-btn');
+            const helpBtn = document.getElementById('help-btn');
 
-            // Тексты для смены
-            const loadingTexts = [
-                'Выгуливаем дракона🏞️!',
-                'Чистим ему зубы🦷!',
-                'Собираем яйца🥚!',
-                'Поджигаем огонь🔥!',
-                'ВХОД'
-            ];
-
-            // Факты о драконах
-            const dragonFacts = [
-                '🤔Драконы могут летать на высоте до 10 000 метров! 🐉',
-                '🤔Драконы едят только самые лучшие деликатесы. 🍽️',
-                '🤔Драконьи яйца невероятно ценны для алхимиков. 🥚',
-                '🤔Говорят, что драконы могут быть друзьями людей! 🤝',
-                '🤔Драконы способны летать и дышать огнём🔥',
-                '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
-                '🤔В мифах драконы часто охраняют сокровища💰',
-                '🤔Древние драконы могут быть настолько большими, что их можно сравнить с целыми горными цепями⛰️',
-                '🤔Считается, что драконы бессмертны и могут жить тысячи лет😱',
-                '🤔Драконы являются одними из самых популярных и устойчивых мифологических существ в мире🐉',
-                '🤔Некоторые драконы могут говорить или дышать огнем, другие не могут🤫',
-                '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
-                '🤔Известно, что дождь может притушить пламя дракона🌧️',
-                '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
-                '🤔В некоторых культурах драконы считались священными животными и защищали своих хозяев от зла⛩️',
-                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
-            ];
-
-            let currentTextIndex = 0;
             let progress = 0;
-            const loadingDuration = 4500; // 4.5 секунды
-            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
-            const increment = (100 / (loadingDuration / intervalTime));
-
-            // Выбор случайного факта при обновлении страницы
-            const randomFactIndex = Math.floor(Math.random() * dragonFacts.length);
-            loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`;
+            const loadingDuration = 5000; // 5 секунд
+            const intervalTime = 50;
+            const increment = 100 / (loadingDuration / intervalTime);
 
             const loadingInterval = setInterval(() => {
                 if (progress < 100) {
@@ -354,22 +138,25 @@
                 }
             }, intervalTime);
 
-            const changeText = () => {
-                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
-                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
-            };
-
-            setInterval(changeText, 1000);
-
             enterGameBtn.addEventListener('click', () => {
-                gameScreen.style.display = 'flex';
                 completedScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
             });
 
-            const gameImage = document.getElementById('game-image');
-            gameImage.addEventListener('click', () => {
-                gameImage.classList.add('animate');
-                setTimeout(() => gameImage.classList.remove('animate'), 200);
+            // Подключение Ton Connect
+            const TonConnect = TonConnectSDK.TonConnect;
+            const connector = new TonConnect();
+
+            helpBtn.addEventListener('click', async () => {
+                try {
+                    await connector.connect({
+                        bridge: 'https://tonhubconnect.com/bridge',
+                    });
+                    alert('Кошелек успешно подключен!');
+                } catch (error) {
+                    console.error('Ошибка подключения:', error);
+                    alert('Ошибка подключения: ' + error.message);
+                }
             });
         });
     </script>
