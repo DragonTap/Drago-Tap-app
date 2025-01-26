@@ -16,6 +16,9 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         /* Загрузочный экран */
@@ -41,7 +44,7 @@
         #loading-text {
             font-size: 2rem;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
             animation: floatText 2s infinite;
             text-align: center;
         }
@@ -49,6 +52,7 @@
         #loading-progress {
             font-size: 1.5rem;
             color: #ff0000;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
             margin-top: 10px;
         }
 
@@ -65,106 +69,159 @@
             100% { transform: translateY(0); }
         }
 
-        /* Экран завершения загрузки */
+        /* Страница с локальным фото дракона */
         #completed-screen {
-            display: none;
             width: 100%;
             height: 100%;
             background-color: black;
-            color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
             text-align: center;
         }
 
-        #completed-screen img {
+        #dragon-image {
             width: 60%;
             max-width: 400px;
             margin-bottom: 20px;
+            pointer-events: none;
         }
 
         #completed-text {
             font-size: 2rem;
-            margin-bottom: 20px;
+            color: yellow;
+            animation: floatText 2s infinite;
         }
 
-        /* Кнопка ВХОД */
         #enter-game-btn {
             padding: 10px 20px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             background-color: #ff0000;
             color: white;
-            border: 2px solid transparent;
-            border-radius: 10px;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 0 10px #ff0000;
+            margin-top: 30px;
+            animation: pulse 1.5s infinite;
         }
 
         #enter-game-btn:hover {
             background-color: #cc0000;
-            transform: scale(1.1);
         }
 
-        #enter-game-btn:active {
-            transform: scale(1);
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
-        /* Страница игры */
+        /* Стиль игры (тапалки) */
         #game-screen {
-            display: none;
             width: 100%;
             height: 100%;
-            background-color: black;
+            background-color: #121212;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
             text-align: center;
         }
 
-        #game-image {
+        #grustno-image {
             width: 60%;
             max-width: 400px;
-            margin-bottom: 20px;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            pointer-events: none;
+            transition: transform 0.3s ease-in-out;
+            object-fit: cover;
+            object-position: center;
         }
 
-        #game-image:active {
+        #grustno-image:active {
             transform: scale(0.95);
         }
 
-        #game-text {
-            font-size: 1.8rem;
-            color: yellow;
+        #upss-text {
+            font-size: 2rem;
+            margin-top: 20px;
+            color: #ff0000;
         }
 
-        /* Кнопка Помочь */
         #help-btn {
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            background-color: #8a2be2;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #ff0000;
             color: white;
-            border: 2px solid #8a2be2;
-            border-radius: 25px;
+            border: none;
             cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 0 10px #ff0000;
+            margin-top: 30px;
+            animation: pulse 1.5s infinite;
         }
 
         #help-btn:hover {
-            background-color: #7a1db6;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            background-color: #cc0000;
         }
 
-        #help-btn:active {
-            transform: scale(1);
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            #loading-text {
+                font-size: 1.5rem;
+            }
+
+            #completed-text, #enter-game-btn, #help-btn {
+                font-size: 1.2rem;
+            }
+
+            #grustno-image {
+                width: 80%;
+            }
+
+            #dragon-image {
+                width: 70%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #loading-text {
+                font-size: 1.2rem;
+            }
+
+            #completed-text, #enter-game-btn, #help-btn {
+                font-size: 1rem;
+            }
+
+            #grustno-image {
+                width: 90%;
+            }
+
+            #dragon-image {
+                width: 80%;
+            }
         }
     </style>
 </head>
@@ -176,11 +233,11 @@
             Ваш браузер не поддерживает видео.
         </video>
         <div id="loading-text">
-            <p>Выгуливаем дракона🏞️!</p>
+            <p>Зажигаем экран📱!</p>
+            <p id="loading-progress">0%</p>
         </div>
-        <div id="loading-progress">0%</div>
         <div id="loading-facts">
-            <p>Драконы могут летать на высоте до 10 000 метров! 🐉</p>
+            Знаете ли вы? Драконы часто описываются как хранители сокровищ!
         </div>
     </div>
 
@@ -188,13 +245,13 @@
     <div id="completed-screen" style="display: none;">
         <img id="dragon-image" src="drago.jpg" alt="Dragon Image">
         <p id="completed-text">Игра загружена!</p>
-        <button id="enter-game-btn">ВХОД</button>
+        <button id="enter-game-btn">Войти в игру</button>
     </div>
 
-    <!-- Страница игры -->
+    <!-- Игровой экран с кликами -->
     <div id="game-screen" style="display: none;">
-        <img id="game-image" src="grustno.png" alt="Game Image">
-        <p id="game-text">Наша игра еще не доработана, но вы можете нам помочь ускорить процесс финансово.</p>
+        <img id="grustno-image" src="grustno.png" alt="Grustno Image">
+        <p id="upss-text">УПСС</p>
         <button id="help-btn">Помочь</button>
     </div>
 
@@ -202,31 +259,82 @@
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const completedScreen = document.getElementById('completed-screen');
-            const loadingProgress = document.getElementById('loading-progress');
-            const enterGameBtn = document.getElementById('enter-game-btn');
             const gameScreen = document.getElementById('game-screen');
+            const loadingText = document.getElementById('loading-text');
+            const loadingProgress = document.getElementById('loading-progress');
+            const loadingFacts = document.getElementById('loading-facts');
+            const loadingVideo = document.getElementById('loading-video');
+            const enterGameBtn = document.getElementById('enter-game-btn');
+            const completedText = document.getElementById('completed-text');
             const helpBtn = document.getElementById('help-btn');
-
+            
+            // Симуляция загрузки, длительностью 5 секунд
             let progress = 0;
-            const increment = 2;
-            const interval = setInterval(() => {
+            const loadingDuration = 5000; // 5 секунд
+            const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
+            const increment = (100 / (loadingDuration / intervalTime));
+
+            const loadingInterval = setInterval(() => {
                 if (progress < 100) {
                     progress += increment;
-                    loadingProgress.textContent = `${progress}%`;
+                    loadingProgress.textContent = `${Math.floor(progress)}%`;
                 } else {
-                    clearInterval(interval);
+                    clearInterval(loadingInterval);
                     loadingScreen.style.display = 'none';
                     completedScreen.style.display = 'flex';
                 }
-            }, 100);
+            }, intervalTime);
 
+            // Смена подсказок
+            const phrases = [
+                'Выгуливаем дракона🏞️!',
+                'Чистим ему зубы🦷!',
+                'Собираем яйца🥚!',
+                'ВХОД'
+            ];
+
+            let phraseIndex = 0;
+
+            setInterval(() => {
+                loadingText.querySelector('p').textContent = phrases[phraseIndex];
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }, 1100);
+
+            // Массив случайных фактов о драконах
+            const dragonFacts = [
+                '🤔Драконы способны летать и дышать огнём🔥',
+                '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
+                '🤔В мифах драконы часто охраняют сокровища💰',
+                '🤔Древние драконы могут быть настолько большими, что их можно сравнить с целыми горными цепями⛰️',
+                '🤔Считается, что драконы бессмертны и могут жить тысячи лет😱',
+                '🤔Драконы являются одними из самых популярных и устойчивых мифологических существ в мире🐉',
+                '🤔Некоторые драконы могут говорить или дышать огнем, другие не могут🤫',
+                '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
+                '🤔Известно, что дождь может притушить пламя дракона🌧️',
+                '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
+                '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла⛩️',
+                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
+            ];
+
+            // Функция для получения случайного факта
+            const getRandomFact = () => {
+                const randomIndex = Math.floor(Math.random() * dragonFacts.length);
+                return dragonFacts[randomIndex];
+            };
+
+            // Вывод случайного факта при входе в игру
+            loadingFacts.textContent = getRandomFact();
+
+            // Обработчик кнопки для входа в игру
             enterGameBtn.addEventListener('click', () => {
-                gameScreen.style.display = 'flex';
                 completedScreen.style.display = 'none';
+                gameScreen.style.display = 'flex';
             });
 
+            // Обработчик кнопки "Помочь", открывающий Telegram с кошельком
             helpBtn.addEventListener('click', () => {
-                window.open('https://t.me/Wallet?start=UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs', '_blank');
+                const walletAddress = 'your_wallet_address'; // Замените на ваш адрес кошелька TON
+                window.open(`https://web.telegram.org/k/#wallet=${walletAddress}`, '_blank');
             });
         });
     </script>
