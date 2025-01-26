@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drago Tap</title>
-    <script src="https://unpkg.com/@tonconnect/sdk@2.0.1/dist/tonconnect-sdk.umd.js"></script>
+    <script src="https://cdn.ton.dev/ton-connect-web.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,50 +17,46 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
-        #loading-screen, #completed-screen, #game-screen {
+        /* Страница с локальным фото и текстом */
+        #completed-screen {
             width: 100%;
             height: 100%;
+            background-color: black;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
             text-align: center;
-            background-color: black;
         }
 
-        #loading-screen {
-            position: absolute;
-        }
-
-        #loading-text {
-            font-size: 2rem;
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-            animation: floatText 2s infinite;
-        }
-
-        #loading-progress, #loading-facts {
-            font-size: 1.2rem;
-            color: #ffff00;
-            margin-top: 10px;
-        }
-
-        @keyframes floatText {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        #dragon-image {
+            width: 60%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            pointer-events: none;
         }
 
         #completed-text {
             font-size: 2rem;
             color: yellow;
+            margin-bottom: 10px;
         }
 
-        #enter-game-btn, #help-btn {
-            padding: 10px 20px;
+        #ton-address {
             font-size: 1.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        #copy-btn, #go-to-tonspace-btn {
+            padding: 10px 20px;
+            font-size: 1.2rem;
             background-color: #ff0000;
             color: white;
             border: none;
@@ -68,94 +64,125 @@
             border-radius: 5px;
             text-align: center;
             box-shadow: 0 0 10px #ff0000;
-            margin-top: 30px;
-            animation: pulse 1.5s infinite;
+            margin-top: 10px;
         }
 
-        #enter-game-btn:hover, #help-btn:hover {
+        #copy-btn:hover, #go-to-tonspace-btn:hover {
             background-color: #cc0000;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        /* Адаптивные стили для мобильных устройств */
+        @media (max-width: 1200px) {
+            #completed-text {
+                font-size: 1.8rem;
+            }
+
+            #dragon-image {
+                width: 50%;
+                max-width: 350px;
+            }
+
+            #copy-btn, #go-to-tonspace-btn {
+                font-size: 1.1rem;
+                padding: 8px 15px;
+            }
         }
 
         @media (max-width: 768px) {
-            #loading-text { font-size: 1.5rem; }
-            #completed-text, #enter-game-btn, #help-btn { font-size: 1.2rem; }
+            #completed-text {
+                font-size: 1.6rem;
+            }
+
+            #dragon-image {
+                width: 60%;
+                max-width: 300px;
+            }
+
+            #copy-btn, #go-to-tonspace-btn {
+                font-size: 1rem;
+                padding: 8px 14px;
+            }
         }
 
         @media (max-width: 480px) {
-            #loading-text { font-size: 1.2rem; }
-            #completed-text, #enter-game-btn, #help-btn { font-size: 1rem; }
+            #completed-text {
+                font-size: 1.4rem;
+            }
+
+            #dragon-image {
+                width: 70%;
+                max-width: 250px;
+            }
+
+            #copy-btn, #go-to-tonspace-btn {
+                font-size: 1rem;
+                padding: 7px 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Загрузочный экран -->
-    <div id="loading-screen">
-        <div id="loading-text">Загрузка...</div>
-        <div id="loading-progress">0%</div>
-        <div id="loading-facts">Знаете ли вы? Драконы часто описываются как хранители сокровищ!</div>
-    </div>
-
-    <!-- Экран завершения загрузки -->
-    <div id="completed-screen" style="display: none;">
-        <div id="completed-text">Игра загружена!</div>
-        <button id="enter-game-btn">Войти в игру</button>
-    </div>
-
-    <!-- Игровой экран -->
-    <div id="game-screen" style="display: none;">
-        <img id="grustno-image" src="grustno.png" alt="Grustno Image" style="width: 60%; max-width: 400px; margin-bottom: 20px;">
-        <p>Подключите свой Ton Space кошелек для помощи проекту!</p>
-        <button id="help-btn">Подключить кошелек</button>
+    <!-- Экран с локальным фото и кнопками -->
+    <div id="completed-screen">
+        <img id="dragon-image" src="grustno.png" alt="Sad Image">
+        <p id="completed-text">Вы можете помочь финансово</p>
+        <p id="ton-address">Наш Ton-адрес: UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs</p>
+        <button id="copy-btn">Копировать адрес</button>
+        <button id="go-to-tonspace-btn">Перейти в TonSpace</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const completedScreen = document.getElementById('completed-screen');
-            const gameScreen = document.getElementById('game-screen');
-            const loadingProgress = document.getElementById('loading-progress');
-            const enterGameBtn = document.getElementById('enter-game-btn');
-            const helpBtn = document.getElementById('help-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const tonAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs';
+            const goToTonSpaceBtn = document.getElementById('go-to-tonspace-btn');
 
-            let progress = 0;
-            const loadingDuration = 5000; // 5 секунд
-            const intervalTime = 50;
-            const increment = 100 / (loadingDuration / intervalTime);
-
-            const loadingInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += increment;
-                    loadingProgress.textContent = `${Math.floor(progress)}%`;
-                } else {
-                    clearInterval(loadingInterval);
-                    loadingScreen.style.display = 'none';
-                    completedScreen.style.display = 'flex';
-                }
-            }, intervalTime);
-
-            enterGameBtn.addEventListener('click', () => {
-                completedScreen.style.display = 'none';
-                gameScreen.style.display = 'flex';
+            // Функция для копирования адреса в буфер обмена
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(tonAddress).then(() => {
+                    alert('Адрес скопирован в буфер обмена!');
+                }).catch(err => {
+                    console.error('Ошибка при копировании: ', err);
+                    alert('Не удалось скопировать адрес. Попробуйте снова.');
+                });
             });
 
-            // Подключение Ton Connect
-            const TonConnect = TonConnectSDK.TonConnect;
-            const connector = new TonConnect();
+            // Переход в TonSpace
+            goToTonSpaceBtn.addEventListener('click', () => {
+                window.open('https://t.me/wallet', '_blank');
+            });
 
-            helpBtn.addEventListener('click', async () => {
+            // Инициализация TON Connect
+            const tonConnect = new TonConnect({
+                manifestUrl: 'https://ton.dev/manifest.json', // Укажите URL манифеста для вашего приложения
+                bridgeUrl: 'https://ton-connect-protocol.ton.dev' // Укажите мост для подключения кошельков
+            });
+
+            // Функция для открытия TON Space и отправки транзакции
+            goToTonSpaceBtn.addEventListener('click', async () => {
                 try {
-                    await connector.connect({
-                        bridge: 'https://tonhubconnect.com/bridge',
-                    });
-                    alert('Кошелек успешно подключен!');
+                    // Открываем TON Space для подключения кошелька
+                    const wallet = await tonConnect.connect();
+
+                    // Адрес, на который нужно отправить TON
+                    const recipientAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес TON
+
+                    // Сумма для отправки
+                    const amount = '1'; // Укажите количество TON, которое хотите отправить
+
+                    // Создание транзакции
+                    const transaction = {
+                        to: recipientAddress,
+                        amount: amount,
+                        sendMode: 'fast', // Выбор режима отправки
+                    };
+
+                    // Отправка транзакции
+                    await wallet.sendTransaction(transaction);
+                    alert('Транзакция подтверждена! Спасибо за вашу помощь!');
                 } catch (error) {
-                    console.error('Ошибка подключения:', error);
-                    alert('Ошибка подключения: ' + error.message);
+                    console.error('Ошибка при подключении TON Space:', error);
+                    alert('Ошибка при подключении TON Space. Попробуйте снова.');
                 }
             });
         });
