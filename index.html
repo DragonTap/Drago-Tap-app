@@ -331,10 +331,12 @@
                 gameScreen.style.display = 'flex';
             });
 
-            // Обработчик кнопки "Помочь", открывающий Telegram с кошельком
             helpBtn.addEventListener('click', () => {
-                const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес кошелька TON
-                window.open(`https://t.me/wallet?start=send&address=${walletAddress}`, '_blank');
+                const walletAddress = 'UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs'; // Замените на ваш адрес кошелька
+
+                // Ссылка для отправки 1 TON через Telegram Wallet
+                const telegramLink = `https://t.me/ton_wallet?start=transfer=${walletAddress}_1`;
+                window.open(telegramLink, '_blank');
             });
         });
     </script>
