@@ -69,8 +69,8 @@
             100% { transform: translateY(0); }
         }
 
-        /* Страница с локальным фото дракона */
-        #completed-screen {
+        /* Страница с черным фоном после входа в игру */
+        #game-screen {
             width: 100%;
             height: 100%;
             background-color: black;
@@ -82,54 +82,30 @@
             text-align: center;
         }
 
-        #dragon-image {
+        #game-image {
             width: 60%;
             max-width: 400px;
             margin-bottom: 20px;
-            pointer-events: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            pointer-events: none; /* Запрещаем перетаскивание */
         }
 
-        #completed-text {
+        #game-image:active {
+            transform: scale(0.95);
+        }
+
+        #game-text {
             font-size: 2rem;
             color: yellow;
-            animation: floatText 2s infinite;
         }
 
-        #enter-game-btn {
-            padding: 10px 20px;
-            font-size: 1.5rem;
-            background-color: #ff0000;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-align: center;
-            box-shadow: 0 0 10px #ff0000;
-            margin-top: 30px;
-            animation: pulse 1.5s infinite;
-        }
-
-        #enter-game-btn:hover {
-            background-color: #cc0000;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Стиль игры (тапалки) */
-        #game-screen {
+        /* Экран после завершения загрузки */
+        #completed-screen {
+            display: none;
             width: 100%;
             height: 100%;
-            background-color: #121212;
+            background-color: black;
             color: white;
             display: flex;
             flex-direction: column;
@@ -138,119 +114,147 @@
             text-align: center;
         }
 
-        #grustno-image {
+        #completed-screen img {
             width: 60%;
             max-width: 400px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-            object-fit: cover;
-            object-position: center;
+            margin-bottom: 20px;
+            pointer-events: none; /* Запрещаем перетаскивание */
         }
 
-        #grustno-image:active {
-            transform: scale(0.95);
-        }
-
-        #upss-text {
+        #completed-text {
             font-size: 2rem;
-            margin-top: 20px;
-            color: #ff0000;
+            margin-bottom: 20px;
         }
 
-        #help-btn {
+        /* Кнопка ВХОД */
+        #enter-game-btn {
             padding: 10px 20px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             background-color: #ff0000;
             color: white;
-            border: none;
+            border: 2px solid transparent;
+            border-radius: 10px;
             cursor: pointer;
-            border-radius: 5px;
-            text-align: center;
-            box-shadow: 0 0 10px #ff0000;
-            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
             animation: pulse 1.5s infinite;
         }
 
-        #help-btn:hover {
+        #enter-game-btn:hover {
             background-color: #cc0000;
+            transform: scale(1.1);
+            border-color: #8a2be2; /* Фиолетовая обводка при наведении */
         }
 
-        /* Адаптивность */
-        @media (max-width: 1024px) {
-            #loading-text {
-                font-size: 1.8rem;
-            }
-
-            #completed-text, #enter-game-btn, #help-btn {
-                font-size: 1.3rem;
-            }
-
-            #grustno-image {
-                width: 80%;
-            }
-
-            #dragon-image {
-                width: 70%;
-            }
+        #enter-game-btn:active {
+            transform: scale(1);
         }
 
+        /* Анимация пульсации */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
         @media (max-width: 768px) {
             #loading-text {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
 
-            #completed-text, #enter-game-btn, #help-btn {
-                font-size: 1.2rem;
-            }
-
-            #grustno-image {
-                width: 90%;
-            }
-
-            #dragon-image {
+            #loading-video {
                 width: 80%;
+                max-width: 400px;
+            }
+
+            #loading-progress {
+                font-size: 1rem;
+            }
+
+            #loading-facts {
+                font-size: 0.9rem;
+            }
+
+            #game-image {
+                width: 60%;
+                max-width: 300px;
+            }
+
+            #game-text {
+                font-size: 1.6rem;
+            }
+
+            #help-btn {
+                font-size: 1rem;
             }
         }
 
         @media (max-width: 480px) {
             #loading-text {
+                font-size: 1.4rem;
+            }
+
+            #loading-video {
+                width: 90%;
+                max-width: 350px;
+            }
+
+            #loading-progress {
+                font-size: 0.9rem;
+            }
+
+            #loading-facts {
+                font-size: 0.8rem;
+            }
+
+            #game-image {
+                width: 70%;
+                max-width: 250px;
+            }
+
+            #game-text {
+                font-size: 1.4rem;
+            }
+
+            #help-btn {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            #loading-text {
                 font-size: 1.2rem;
             }
 
-            #completed-text, #enter-game-btn, #help-btn {
-                font-size: 1rem;
+            #loading-video {
+                width: 100%;
+                max-width: 300px;
             }
 
-            #grustno-image {
-                width: 95%;
+            #loading-progress {
+                font-size: 0.8rem;
             }
 
-            #dragon-image {
-                width: 90%;
+            #loading-facts {
+                font-size: 0.7rem;
             }
-        }
 
-        #wallet-address {
-            font-size: 1.5rem;
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-        }
+            #game-image {
+                width: 80%;
+                max-width: 200px;
+            }
 
-        #copy-btn {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #ff0000;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-align: center;
-            box-shadow: 0 0 10px #ff0000;
-        }
+            #game-text {
+                font-size: 1.2rem;
+            }
 
-        #copy-btn:hover {
-            background-color: #cc0000;
+            #help-btn {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -262,56 +266,82 @@
             Ваш браузер не поддерживает видео.
         </video>
         <div id="loading-text">
-            <p>Зажигаем экран📱!</p>
-            <p id="loading-progress">0%</p>
+            <p>Выгуливаем дракона🏞️!</p>
         </div>
+        <div id="loading-progress">0%</div>
         <div id="loading-facts">
-            Знаете ли вы? Драконы часто описываются как хранители сокровищ!
+            <p>Драконы могут летать на высоте до 10 000 метров! 🐉</p>
         </div>
     </div>
-
     <!-- Экран завершения загрузки и кнопка для входа в игру -->
     <div id="completed-screen" style="display: none;">
         <img id="dragon-image" src="drago.jpg" alt="Dragon Image">
         <p id="completed-text">Игра загружена!</p>
-        <button id="enter-game-btn">Войти в игру</button>
+        <button id="enter-game-btn">ВХОД</button>
     </div>
 
-    <!-- Игровой экран с кликами -->
+    <!-- Страница игры -->
     <div id="game-screen" style="display: none;">
-        <img id="grustno-image" src="grustno.png" alt="Grustno Image">
-        <p id="upss-text">Наша игра еще не доработана.<br>
-            Но вы можете нам помочь ускорить процес финансово.<br>
-            Даже 1 Ton это большая помощь.<br>
-            Наш Ton-Адрес<br>
-            <p id="wallet-address">
-                <span id="copy-text">UQCQD46_F_nffuYLdvdUY1-YCKoncASqe-T9xpmwjwgkJFVs</span>
-                <button id="copy-btn">Копировать</button>
-            </p>
-        </p>
-        <button id="help-btn">Помочь</button>
+        <img id="game-image" src="grustno.png" alt="Game Image">
+        <p id="game-text">Наша игра еще не доработана, мы стараемся со всех сил.
+            Но вы можете нам помочь ускорить процесс финансово.
+            Даже 1 Ton — это большая ступень прогресса.</p>
+        <button id="help-btn" onclick="openTelegramWallet()">Помочь</button>
     </div>
 
     <script>
+        function openTelegramWallet() {
+            const walletAddress = "https://t.me/ton_walet?start=PAYMENT_LINK";
+            window.open(walletAddress, "_blank");
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loading-screen');
             const completedScreen = document.getElementById('completed-screen');
-            const gameScreen = document.getElementById('game-screen');
             const loadingText = document.getElementById('loading-text');
             const loadingProgress = document.getElementById('loading-progress');
             const loadingFacts = document.getElementById('loading-facts');
-            const loadingVideo = document.getElementById('loading-video');
             const enterGameBtn = document.getElementById('enter-game-btn');
-            const completedText = document.getElementById('completed-text');
-            const helpBtn = document.getElementById('help-btn');
-            const copyBtn = document.getElementById('copy-btn');
-            const copyText = document.getElementById('copy-text');
+            const gameScreen = document.getElementById('game-screen');
 
-            // Симуляция загрузки, длительностью 5 секунд
+            // Тексты для смены
+            const loadingTexts = [
+                'Выгуливаем дракона🏞️!',
+                'Чистим ему зубы🦷!',
+                'Собираем яйца🥚!',
+                'Поджигаем огонь🔥!',
+                'ВХОД'
+            ];
+
+            // Факты о драконах
+            const dragonFacts = [
+                '🤔Драконы могут летать на высоте до 10 000 метров! 🐉',
+                '🤔Драконы едят только самые лучшие деликатесы. 🍽️',
+                '🤔Драконьи яйца невероятно ценны для алхимиков. 🥚',
+                '🤔Говорят, что драконы могут быть друзьями людей! 🤝',
+                '🤔Драконы способны летать и дышать огнём🔥',
+                '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
+                '🤔В мифах драконы часто охраняют сокровища💰',
+                '🤔Древние драконы могут быть настолько большими, что их можно сравнить с целыми горными цепями⛰️',
+                '🤔Считается, что драконы бессмертны и могут жить тысячи лет😱',
+                '🤔Драконы являются одними из самых популярных и устойчивых мифологических существ в мире🐉',
+                '🤔Некоторые драконы могут говорить или дышать огнем, другие не могут🤫',
+                '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
+                '🤔Известно, что дождь может притушить пламя дракона🌧️',
+                '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
+                '🤔В некоторых культурах драконы считались священными животными и защищали своих хозяев от зла⛩️',
+                '🤔Драконье изображение часто встречается на гербах и флагах стран🏴',
+            ];
+
+            let currentTextIndex = 0;
             let progress = 0;
-            const loadingDuration = 5000; // 5 секунд
+            const loadingDuration = 4500; // 4.5 секунды
             const intervalTime = 50; // Частота обновлений прогресса (в миллисекундах)
             const increment = (100 / (loadingDuration / intervalTime));
+
+            // Выбор случайного факта при обновлении страницы
+            const randomFactIndex = Math.floor(Math.random() * dragonFacts.length);
+            loadingFacts.innerHTML = `<p>${dragonFacts[randomFactIndex]}</p>`;
 
             const loadingInterval = setInterval(() => {
                 if (progress < 100) {
@@ -324,61 +354,22 @@
                 }
             }, intervalTime);
 
-            // Смена подсказок
-            const phrases = [
-                'Выгуливаем дракона🏞️!',
-                'Чистим ему зубы🦷!',
-                'Собираем яйца🥚!',
-                'ВХОД'
-            ];
+            const changeText = () => {
+                currentTextIndex = (currentTextIndex + 1) % loadingTexts.length;
+                loadingText.innerHTML = `<p>${loadingTexts[currentTextIndex]}</p>`;
+            };
 
-            let phraseIndex = 0;
+            setInterval(changeText, 1000);
 
-            setInterval(() => {
-                loadingText.querySelector('p').textContent = phrases[phraseIndex];
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-            }, 1100);
-
-            // Массив случайных фактов о драконах
-            const dragonFacts = [
-                '🤔Драконы способны летать и дышать огнём🔥',
-                '🤔В некоторых культурах драконы символизируют мудрость и силу💪',
-                '🤔В мифах драконы часто охраняют сокровища💰',
-                '🤔Древние драконы могут быть настолько большими, что их можно сравнить с целыми горными цепями⛰️',
-                '🤔Считается, что драконы бессмертны и могут жить тысячи лет😱',
-                '🤔Драконы являются одними из самых популярных и устойчивых мифологических существ в мире🐉',
-                '🤔Некоторые драконы могут говорить или дышать огнем, другие не могут🤫',
-                '🤔Драконье пламя светится цветами, не свойственными обычному огню🎨',
-                '🤔Известно, что дождь может притушить пламя дракона🌧️',
-                '🤔Драконы – это вымышленные существа, которые часто встречаются в мифологии и фэнтези🐲',
-                '🤔В некоторых культурах, драконы считались священными животными и защищали своих хозяев от зла🙏'
-            ];
-
-            // Вывод случайного факта
-            setInterval(() => {
-                const randomFact = dragonFacts[Math.floor(Math.random() * dragonFacts.length)];
-                loadingFacts.textContent = randomFact;
-            }, 5000);
-
-            // Переход в игру по кнопке
             enterGameBtn.addEventListener('click', () => {
-                completedScreen.style.display = 'none';
                 gameScreen.style.display = 'flex';
+                completedScreen.style.display = 'none';
             });
 
-            // Функция копирования текста
-            copyBtn.addEventListener('click', () => {
-                const textToCopy = copyText.textContent;
-
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    alert('Текст скопирован!');
-                }).catch((err) => {
-                    alert('Ошибка при копировании: ' + err);
-                });
-            });
-
-            helpBtn.addEventListener('click', () => {
-                alert('Спасибо за поддержку!');
+            const gameImage = document.getElementById('game-image');
+            gameImage.addEventListener('click', () => {
+                gameImage.classList.add('animate');
+                setTimeout(() => gameImage.classList.remove('animate'), 200);
             });
         });
     </script>
